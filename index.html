@@ -146,7 +146,8 @@ select {
 }
 
 .search-card,
-.profile-card {
+.profile-card,
+.alert-card {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 14px;
@@ -434,6 +435,7 @@ select {
       <button class="nav-item active" id="navSearch" onclick="showAll()">🔎 Recherche</button>
       <button class="nav-item" id="navFavorites" onclick="showFavorites()">⭐ Favoris</button>
       <button class="nav-item" id="navApplications" onclick="showApplications()">📋 Candidatures</button>
+      <button class="nav-item" id="navAlerts" onclick="showAlerts()">🔔 Alertes & Agent IA</button>
       <button class="nav-item" id="navProfile" onclick="showProfile()">⚙️ Mon Profil & CV</button>
     </aside>
 
@@ -516,12 +518,21 @@ let userProfile = JSON.parse(localStorage.getItem("jobAlertProfile") || JSON.str
   minSalary: 50000
 }));
 
+let alertConfig = JSON.parse(localStorage.getItem("jobAlertConfig") || JSON.stringify({
+  searchQuery: "Expérience Client",
+  locationQuery: "Paris",
+  aiPrompt: "Analyse les offres et ne retiens que celles qui mettent en avant le management d'équipe et le télétravail hybride.",
+  frequency: "Quotidienne",
+  time: "20:00"
+}));
+
 let currentView = "search";
 
 function saveData() {
   localStorage.setItem("jobAlertFavorites", JSON.stringify(favorites));
   localStorage.setItem("jobAlertApplications", JSON.stringify(applications));
   localStorage.setItem("jobAlertProfile", JSON.stringify(userProfile));
+  localStorage.setItem("jobAlertConfig", JSON.stringify(alertConfig));
 }
 
 function setActiveNav(navId) {
@@ -599,6 +610,68 @@ function renderSearchPage() {
   searchJobs();
 }
 
+function showAlerts() {
+  currentView = "alerts";
+  setActiveNav("navAlerts");
+
+  const main = document.getElementById("mainContent");
+  main.innerHTML = `
+    <h1 class="page-title">Paramétrage des Alertes & Agent IA</h1>
+    <p class="page-description">Configure ta recherche automatisée et donne des instructions personnalisées à ton agent de recherche.</p>
+
+    <div class="alert-card">
+      <div style="margin-bottom: 14px;">
+        <label style="display: block; font-weight: 700; margin-bottom: 6px; font-size: 14px;">🔍 Recherche par mots-clés</label>
+        <input id="alertSearch" class="input" type="text" value="${alertConfig.searchQuery}" placeholder="Ex: Expérience Client, Product Owner...">
+      </div>
+
+      <div style="margin-bottom: 14px;">
+        <label style="display: block; font-weight: 700; margin-bottom: 6px; font-size: 14px;">📍 Localisation visée</label>
+        <input id="alertLocation" class="input" type="text" value="${alertConfig.locationQuery}" placeholder="Ex: Paris, Île-de-France, Remote...">
+      </div>
+
+      <div style="margin-bottom: 14px;">
+        <label style="display: block; font-weight: 700; margin-bottom: 6px; font-size: 14px;">🤖 Prompt personnalisé pour l'agent IA</label>
+        <textarea id="alertPrompt" class="textarea" placeholder="Ex: Sois très strict sur les salaires minimums et privilégie les entreprises éco-responsables...">${alertConfig.aiPrompt}</textarea>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px;">
+        <div>
+          <label style="display: block; font-weight: 700; margin-bottom: 6px; font-size: 14px;">⏱️ Fréquence</label>
+          <select id="alertFrequency" class="select">
+            <option value="Quotidienne" ${alertConfig.frequency === "Quotidienne" ? "selected" : ""}>Quotidienne</option>
+            <option value="Hebdomadaire" ${alertConfig.frequency === "Hebdomadaire" ? "selected" : ""}>Hebdomadaire</option>
+          </select>
+        </div>
+        <div>
+          <label style="display: block; font-weight: 700; margin-bottom: 6px; font-size: 14px;">⏰ Horaire de l'alerte</label>
+          <input id="alertTime" class="input" type="time" value="${alertConfig.time}">
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <button class="search-button" style="flex: 1; min-height: 48px;" onclick="saveAlertConfig()">Enregistrer l'alerte</button>
+        <button class="small-button" style="padding: 0 20px; font-weight: 700; background: #f2f4f7;" onclick="testAlerteAgent()">Tester l'agent</button>
+      </div>
+    </div>
+  `;
+}
+
+function saveAlertConfig() {
+  alertConfig.searchQuery = document.getElementById("alertSearch").value;
+  alertConfig.locationQuery = document.getElementById("alertLocation").value;
+  alertConfig.aiPrompt = document.getElementById("alertPrompt").value;
+  alertConfig.frequency = document.getElementById("alertFrequency").value;
+  alertConfig.time = document.getElementById("alertTime").value;
+
+  saveData();
+  alert("Paramètres d'alerte enregistrés avec succès ! L'agent se basera sur ton prompt pour la prochaine veille.");
+}
+
+function testAlerteAgent() {
+  alert("🤖 Agent IA : J'ai bien pris en compte ton prompt !\n\n' " + document.getElementById("alertPrompt").value + " '\n\nJe scannerai les offres à " + document.getElementById("alertTime").value + " selon la fréquence " + document.getElementById("alertFrequency").value + ".");
+}
+
 function showProfile() {
   currentView = "profile";
   setActiveNav("navProfile");
@@ -659,113 +732,10 @@ function searchJobs() {
   let results = jobs.filter(job => {
     const text = (job.title + " " + job.company + " " + job.tags.join(" ")).toLowerCase();
     
-    // Filtrage automatique des exclusions du profil
     const exclusionWords = userProfile.exclusions.toLowerCase().split(",").map(w => w.trim()).filter(Boolean);
     const hasExcludedWord = exclusionWords.some(word => text.includes(word));
     if (hasExcludedWord) return false;
 
     return (
       (!search || text.includes(search)) &&
-      (!location || job.location.toLowerCase().includes(location)) &&
-      (!company || job.company.toLowerCase().includes(company)) &&
-      (!salary || job.maxSalary >= salary) &&
-      (!contract || job.contract === contract) &&
-      (!remote || job.remote === remote)
-    );
-  });
-
-  sortResults(results, sort);
-  displayJobs(results);
-}
-
-function sortResults(results, sort) {
-  if (sort === "salary") results.sort((a,b) => b.salary - a.salary);
-  if (sort === "date") results.sort((a,b) => new Date(b.date) - new Date(a.date));
-  if (sort === "score") results.sort((a,b) => b.score - a.score);
-}
-
-function displayJobs(results) {
-  const container = document.getElementById("jobs");
-  if (!container) return;
-
-  document.getElementById("totalJobs").textContent = results.length;
-  document.getElementById("resultsCount").textContent = results.length + " offre" + (results.length > 1 ? "s" : "") + " correspondant à tes critères";
-
-  if (results.length === 0) {
-    container.innerHTML = `<div class="empty"><strong>Aucune offre trouvée</strong><br><span>Essaie d'élargir tes critères ou vérifie tes exclusions de profil.</span></div>`;
-    return;
-  }
-
-  container.innerHTML = results.map(job => {
-    const isFavorite = favorites.includes(job.id);
-    const application = applications[job.id] || "";
-
-    return `
-      <article class="job">
-        <div class="job-top">
-          <div>
-            <h2 class="job-title">${job.title}</h2>
-            <div class="company">${job.company} · ${job.location}</div>
-          </div>
-          <div class="score">${job.score}% match</div>
-        </div>
-
-        <div class="meta">
-          <span class="tag">${job.contract}</span>
-          <span class="tag">${job.remote === "Oui" ? "Télétravail" : "Sur site"}</span>
-          ${job.tags.map(tag => `<span class="tag">${tag}</span>`).join("")}
-        </div>
-
-        <div class="salary">
-          ${job.salary.toLocaleString("fr-FR")} – ${job.maxSalary.toLocaleString("fr-FR")} € / an
-        </div>
-
-        <div class="ai-advice">
-          ${job.aiAdvice}
-        </div>
-
-        <div class="job-footer">
-          <div class="date">Publiée le ${formatDate(job.date)} · ${job.source}</div>
-          <div class="job-actions">
-            <button class="small-button ${isFavorite ? "favorite" : ""}" onclick="toggleFavorite(${job.id})">
-              ${isFavorite ? "★ Favori" : "☆ Favori"}
-            </button>
-            <button class="small-button" onclick="shareJob(${job.id})">
-              🔗 Partager
-            </button>
-            <select class="status-select" onchange="setApplication(${job.id}, this.value)">
-              <option value="">Suivi</option>
-              <option value="À contacter" ${application === "À contacter" ? "selected" : ""}>À contacter</option>
-              <option value="Candidature envoyée" ${application === "Candidature envoyée" ? "selected" : ""}>Candidature envoyée</option>
-              <option value="Entretien" ${application === "Entretien" ? "selected" : ""}>Entretien</option>
-              <option value="Refus" ${application === "Refus" ? "selected" : ""}>Refus</option>
-            </select>
-            <button class="small-button primary" onclick="viewJob(${job.id})">Voir</button>
-          </div>
-        </div>
-      </article>
-    `;
-  }).join("");
-}
-
-function toggleFavorite(id) {
-  if (favorites.includes(id)) {
-    favorites = favorites.filter(item => item !== id);
-  } else {
-    favorites.push(id);
-  }
-  saveData();
-  if (currentView === "search") searchJobs();
-  if (currentView === "favorites") showFavorites();
-  document.getElementById("favoriteCount").textContent = favorites.length;
-}
-
-function shareJob(id) {
-  const job = jobs.find(item => item.id === id);
-  if (!job) return;
-
-  const shareData = {
-    title: job.title,
-    text: `Regarde cette offre d'emploi : ${job.title} chez ${job.company} (${job.location}) - Salaire : ${job.salary}€`,
-    url: window.location.href
-  
+      (!location || job.location.

@@ -16,6 +16,7 @@
   --primary-dark: #1d4ed8;
   --green: #15803d;
   --orange: #c2410c;
+  --red: #dc2626;
   --shadow: 0 4px 18px rgba(16,24,40,.07);
 }
 
@@ -48,7 +49,6 @@ select {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
 }
 
 .logo {
@@ -119,6 +119,31 @@ select {
   margin: 7px 0 20px;
 }
 
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.stat {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.stat-number {
+  font-size: 23px;
+  font-weight: 800;
+}
+
+.stat-label {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 3px;
+}
+
 .search-card {
   background: var(--card);
   border: 1px solid var(--border);
@@ -153,10 +178,6 @@ select {
   color: white;
   font-weight: 700;
   cursor: pointer;
-}
-
-.search-button:hover {
-  background: var(--primary-dark);
 }
 
 .advanced {
@@ -290,6 +311,19 @@ select {
   border-color: var(--primary);
 }
 
+.small-button.favorite {
+  color: #b45309;
+  border-color: #f59e0b;
+}
+
+.status-select {
+  min-height: 38px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0 8px;
+  background: white;
+}
+
 .empty {
   background: white;
   border: 1px dashed var(--border);
@@ -299,32 +333,8 @@ select {
   color: var(--muted);
 }
 
-.stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin-bottom: 18px;
-}
-
-.stat {
-  background: white;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 14px;
-}
-
-.stat-number {
-  font-size: 23px;
-  font-weight: 800;
-}
-
-.stat-label {
-  color: var(--muted);
-  font-size: 12px;
-  margin-top: 3px;
-}
-
 @media (max-width: 800px) {
+
   .dashboard {
     grid-template-columns: 1fr;
   }
@@ -347,23 +357,12 @@ select {
   .advanced-grid {
     grid-template-columns: 1fr 1fr;
   }
-
-  .stats {
-    grid-template-columns: repeat(3, 1fr);
-  }
 }
 
 @media (max-width: 500px) {
+
   .container {
     padding: 18px 10px 40px;
-  }
-
-  .header {
-    padding: 15px;
-  }
-
-  .page-title {
-    font-size: 23px;
   }
 
   .advanced-grid {
@@ -402,9 +401,11 @@ select {
 
   .job-actions {
     width: 100%;
+    flex-wrap: wrap;
   }
 
-  .small-button {
+  .small-button,
+  .status-select {
     flex: 1;
   }
 }
@@ -414,49 +415,114 @@ select {
 <body>
 
 <header class="header">
+
   <div class="header-inner">
+
     <div>
-      <div class="logo">🎯 Job-<span>Radar</span></div>
-      <div class="header-subtitle">Ta veille emploi, centralisée et personnalisée</div>
+      <div class="logo">
+        🎯 Job-<span>Radar</span>
+      </div>
+
+      <div class="header-subtitle">
+        Ta veille emploi, centralisée et personnalisée
+      </div>
     </div>
+
   </div>
+
 </header>
+
 
 <div class="container">
 
   <div class="dashboard">
 
     <aside class="sidebar">
-      <button class="nav-item active">🔎 Recherche</button>
-      <button class="nav-item">⭐ Favoris</button>
-      <button class="nav-item">📋 Candidatures</button>
-      <button class="nav-item">⚙️ Préférences</button>
+
+      <button
+        class="nav-item active"
+        onclick="showAll()">
+        🔎 Recherche
+      </button>
+
+      <button
+        class="nav-item"
+        onclick="showFavorites()">
+        ⭐ Favoris
+      </button>
+
+      <button
+        class="nav-item"
+        onclick="showApplications()">
+        📋 Candidatures
+      </button>
+
+      <button
+        class="nav-item"
+        onclick="alert('Les préférences seront ajoutées dans une prochaine version.')">
+        ⚙️ Préférences
+      </button>
+
     </aside>
+
 
     <main class="main">
 
-      <h1 class="page-title">Trouver ton prochain poste</h1>
+      <h1 class="page-title">
+        Trouver ton prochain poste
+      </h1>
 
       <p class="page-description">
         Recherche, filtre et compare les opportunités qui correspondent à tes critères.
       </p>
 
+
       <section class="stats">
-        <div class="stat">
-          <div class="stat-number" id="totalJobs">0</div>
-          <div class="stat-label">offres trouvées</div>
-        </div>
 
         <div class="stat">
-          <div class="stat-number">3</div>
-          <div class="stat-label">sources prévues</div>
+          <div
+            class="stat-number"
+            id="totalJobs">
+            0
+          </div>
+
+          <div class="stat-label">
+            offres affichées
+          </div>
         </div>
 
+
         <div class="stat">
-          <div class="stat-number">0</div>
-          <div class="stat-label">favoris</div>
+
+          <div
+            class="stat-number"
+            id="favoriteCount">
+            0
+          </div>
+
+          <div class="stat-label">
+            favoris
+          </div>
+
         </div>
+
+
+        <div class="stat">
+
+          <div
+            class="stat-number"
+            id="applicationCount">
+            0
+          </div>
+
+          <div class="stat-label">
+            candidatures
+          </div>
+
+        </div>
+
       </section>
+
 
       <section class="search-card">
 
@@ -466,12 +532,14 @@ select {
             id="search"
             class="input"
             placeholder="Poste, compétence, mot-clé..."
+            oninput="searchJobs()"
           >
 
           <input
             id="location"
             class="input"
             placeholder="Localisation"
+            oninput="searchJobs()"
           >
 
           <input
@@ -479,16 +547,24 @@ select {
             class="input"
             type="number"
             placeholder="Salaire min. €"
+            oninput="searchJobs()"
           >
 
-          <button class="search-button" onclick="searchJobs()">
+          <button
+            class="search-button"
+            onclick="searchJobs()">
             Rechercher
           </button>
 
         </div>
 
+
         <details class="advanced">
-          <summary>Filtres avancés</summary>
+
+          <summary>
+            Filtres avancés
+          </summary>
+
 
           <div class="advanced-grid">
 
@@ -496,25 +572,71 @@ select {
               id="company"
               class="input"
               placeholder="Entreprise"
+              oninput="searchJobs()"
             >
 
-            <select id="contract" class="select">
-              <option value="">Contrat</option>
-              <option value="CDI">CDI</option>
-              <option value="CDD">CDD</option>
-              <option value="Freelance">Freelance</option>
+
+            <select
+              id="contract"
+              class="select"
+              onchange="searchJobs()">
+
+              <option value="">
+                Contrat
+              </option>
+
+              <option value="CDI">
+                CDI
+              </option>
+
+              <option value="CDD">
+                CDD
+              </option>
+
+              <option value="Freelance">
+                Freelance
+              </option>
+
             </select>
 
-            <select id="remote" class="select">
-              <option value="">Télétravail</option>
-              <option value="Oui">Télétravail possible</option>
-              <option value="Non">Pas de télétravail</option>
+
+            <select
+              id="remote"
+              class="select"
+              onchange="searchJobs()">
+
+              <option value="">
+                Télétravail
+              </option>
+
+              <option value="Oui">
+                Télétravail possible
+              </option>
+
+              <option value="Non">
+                Pas de télétravail
+              </option>
+
             </select>
 
-            <select id="sort" class="select" onchange="searchJobs()">
-              <option value="score">Pertinence</option>
-              <option value="date">Plus récentes</option>
-              <option value="salary">Salaire décroissant</option>
+
+            <select
+              id="sort"
+              class="select"
+              onchange="searchJobs()">
+
+              <option value="score">
+                Pertinence
+              </option>
+
+              <option value="date">
+                Plus récentes
+              </option>
+
+              <option value="salary">
+                Salaire décroissant
+              </option>
+
             </select>
 
           </div>
@@ -523,17 +645,40 @@ select {
 
       </section>
 
-      <div class="results-header">
-        <div class="results-count" id="resultsCount"></div>
 
-        <select id="sortMobile" class="select sort" onchange="changeSort()">
-          <option value="score">Pertinence</option>
-          <option value="date">Plus récentes</option>
-          <option value="salary">Salaire décroissant</option>
+      <div class="results-header">
+
+        <div
+          class="results-count"
+          id="resultsCount">
+        </div>
+
+        <select
+          id="sortMobile"
+          class="select sort"
+          onchange="changeSort()">
+
+          <option value="score">
+            Pertinence
+          </option>
+
+          <option value="date">
+            Plus récentes
+          </option>
+
+          <option value="salary">
+            Salaire décroissant
+          </option>
+
         </select>
+
       </div>
 
-      <section id="jobs" class="jobs"></section>
+
+      <section
+        id="jobs"
+        class="jobs">
+      </section>
 
     </main>
 
@@ -541,11 +686,13 @@ select {
 
 </div>
 
+
 <script>
 
 const jobs = [
 
   {
+    id: 1,
     title: "Responsable Expérience Client",
     company: "Entreprise exemple",
     location: "Paris",
@@ -555,11 +702,16 @@ const jobs = [
     maxSalary: 75000,
     score: 96,
     date: "2026-08-14",
-    tags: ["Expérience Client", "VoC", "Management"],
+    tags: [
+      "Expérience Client",
+      "VoC",
+      "Management"
+    ],
     source: "Entreprise"
   },
 
   {
+    id: 2,
     title: "Responsable Satisfaction Client",
     company: "Entreprise exemple",
     location: "Île-de-France",
@@ -569,11 +721,15 @@ const jobs = [
     maxSalary: 70000,
     score: 92,
     date: "2026-08-13",
-    tags: ["Customer Experience", "Management"],
+    tags: [
+      "Customer Experience",
+      "Management"
+    ],
     source: "LinkedIn"
   },
 
   {
+    id: 3,
     title: "Product Owner Data",
     company: "Entreprise exemple",
     location: "Paris",
@@ -583,11 +739,16 @@ const jobs = [
     maxSalary: 68000,
     score: 84,
     date: "2026-08-11",
-    tags: ["Product", "Data", "Agile"],
+    tags: [
+      "Product",
+      "Data",
+      "Agile"
+    ],
     source: "France Travail"
   },
 
   {
+    id: 4,
     title: "Chef de Projet Expérience Client",
     company: "Entreprise exemple",
     location: "Boulogne-Billancourt",
@@ -597,111 +758,80 @@ const jobs = [
     maxSalary: 60000,
     score: 78,
     date: "2026-08-09",
-    tags: ["CX", "Parcours Client", "Voix du Client"],
+    tags: [
+      "CX",
+      "Parcours Client",
+      "Voix du Client"
+    ],
     source: "LinkedIn"
   }
 
 ];
 
-function displayJobs(results) {
 
-  const container = document.getElementById("jobs");
+let favorites =
+  JSON.parse(
+    localStorage.getItem("jobRadarFavorites") || "[]"
+  );
 
-  document.getElementById("totalJobs").textContent = results.length;
 
-  document.getElementById("resultsCount").textContent =
-    results.length + " offre" + (results.length > 1 ? "s" : "") + " correspondant à tes critères";
+let applications =
+  JSON.parse(
+    localStorage.getItem("jobRadarApplications") || "{}"
+  );
 
-  if (results.length === 0) {
-    container.innerHTML = `
-      <div class="empty">
-        <strong>Aucune offre trouvée</strong>
-        <br>
-        <span>Essaie d'élargir tes critères de recherche.</span>
-      </div>
-    `;
-    return;
-  }
 
-  container.innerHTML = results.map((job, index) => `
+function saveData() {
 
-    <article class="job">
+  localStorage.setItem(
+    "jobRadarFavorites",
+    JSON.stringify(favorites)
+  );
 
-      <div class="job-top">
+  localStorage.setItem(
+    "jobRadarApplications",
+    JSON.stringify(applications)
+  );
 
-        <div>
-          <h2 class="job-title">${job.title}</h2>
-          <div class="company">${job.company} · ${job.location}</div>
-        </div>
-
-        <div class="score">
-          ${job.score}% match
-        </div>
-
-      </div>
-
-      <div class="meta">
-
-        <span class="tag">${job.contract}</span>
-
-        <span class="tag">
-          ${job.remote === "Oui" ? "Télétravail" : "Sur site"}
-        </span>
-
-        ${job.tags.map(tag =>
-          `<span class="tag">${tag}</span>`
-        ).join("")}
-
-      </div>
-
-      <div class="salary">
-        ${job.salary.toLocaleString("fr-FR")}
-        – 
-        ${job.maxSalary.toLocaleString("fr-FR")} € / an
-      </div>
-
-      <div class="job-footer">
-
-        <div class="date">
-          Publiée le ${formatDate(job.date)} · ${job.source}
-        </div>
-
-        <div class="job-actions">
-
-          <button
-            class="small-button"
-            onclick="favorite(${index})">
-            ☆ Favori
-          </button>
-
-          <button
-            class="small-button primary"
-            onclick="viewJob(${index})">
-            Voir l'offre
-          </button>
-
-        </div>
-
-      </div>
-
-    </article>
-
-  `).join("");
+  updateStats();
 }
+
+
+function updateStats() {
+
+  document.getElementById("favoriteCount").textContent =
+    favorites.length;
+
+  document.getElementById("applicationCount").textContent =
+    Object.keys(applications).length;
+
+}
+
 
 function searchJobs() {
 
   const search =
-    document.getElementById("search").value.toLowerCase();
+    document
+      .getElementById("search")
+      .value
+      .toLowerCase();
 
   const location =
-    document.getElementById("location").value.toLowerCase();
+    document
+      .getElementById("location")
+      .value
+      .toLowerCase();
 
   const company =
-    document.getElementById("company").value.toLowerCase();
+    document
+      .getElementById("company")
+      .value
+      .toLowerCase();
 
   const salary =
-    Number(document.getElementById("minSalary").value) || 0;
+    Number(
+      document.getElementById("minSalary").value
+    ) || 0;
 
   const contract =
     document.getElementById("contract").value;
@@ -712,87 +842,450 @@ function searchJobs() {
   const sort =
     document.getElementById("sort").value;
 
-  let results = jobs.filter(job => {
 
-    const text =
-      (job.title + " " + job.company + " " + job.tags.join(" "))
-      .toLowerCase();
+  let results =
+    jobs.filter(job => {
 
-    return (
-      (!search || text.includes(search)) &&
-      (!location || job.location.toLowerCase().includes(location)) &&
-      (!company || job.company.toLowerCase().includes(company)) &&
-      (!salary || job.maxSalary >= salary) &&
-      (!contract || job.contract === contract) &&
-      (!remote || job.remote === remote)
-    );
+      const text =
+        (
+          job.title +
+          " " +
+          job.company +
+          " " +
+          job.tags.join(" ")
+        ).toLowerCase();
 
-  });
 
-  sortResults(results, sort);
+      return (
+
+        (!search ||
+          text.includes(search))
+
+        &&
+
+        (!location ||
+          job.location
+            .toLowerCase()
+            .includes(location))
+
+        &&
+
+        (!company ||
+          job.company
+            .toLowerCase()
+            .includes(company))
+
+        &&
+
+        (!salary ||
+          job.maxSalary >= salary)
+
+        &&
+
+        (!contract ||
+          job.contract === contract)
+
+        &&
+
+        (!remote ||
+          job.remote === remote)
+
+      );
+
+    });
+
+
+  sortResults(
+    results,
+    sort
+  );
+
 
   displayJobs(results);
+
 }
 
-function sortResults(results, sort) {
+
+function sortResults(
+  results,
+  sort
+) {
 
   if (sort === "salary") {
-    results.sort((a, b) => b.salary - a.salary);
+
+    results.sort(
+      (a,b) =>
+        b.salary - a.salary
+    );
+
   }
+
 
   if (sort === "date") {
-    results.sort((a, b) =>
-      new Date(b.date) - new Date(a.date)
+
+    results.sort(
+      (a,b) =>
+        new Date(b.date) -
+        new Date(a.date)
     );
+
   }
 
+
   if (sort === "score") {
-    results.sort((a, b) => b.score - a.score);
+
+    results.sort(
+      (a,b) =>
+        b.score - a.score
+    );
+
   }
 
 }
+
+
+function displayJobs(results) {
+
+  const container =
+    document.getElementById("jobs");
+
+
+  document.getElementById("totalJobs").textContent =
+    results.length;
+
+
+  document.getElementById("resultsCount").textContent =
+    results.length +
+    " offre" +
+    (results.length > 1 ? "s" : "") +
+    " correspondant à tes critères";
+
+
+  if (results.length === 0) {
+
+    container.innerHTML = `
+
+      <div class="empty">
+
+        <strong>
+          Aucune offre trouvée
+        </strong>
+
+        <br>
+
+        <span>
+          Essaie d'élargir tes critères de recherche.
+        </span>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  container.innerHTML =
+    results.map(job => {
+
+      const isFavorite =
+        favorites.includes(job.id);
+
+
+      const application =
+        applications[job.id] || "";
+
+
+      return `
+
+        <article class="job">
+
+          <div class="job-top">
+
+            <div>
+
+              <h2 class="job-title">
+                ${job.title}
+              </h2>
+
+              <div class="company">
+                ${job.company}
+                ·
+                ${job.location}
+              </div>
+
+            </div>
+
+
+            <div class="score">
+              ${job.score}% match
+            </div>
+
+          </div>
+
+
+          <div class="meta">
+
+            <span class="tag">
+              ${job.contract}
+            </span>
+
+            <span class="tag">
+              ${
+                job.remote === "Oui"
+                ? "Télétravail"
+                : "Sur site"
+              }
+            </span>
+
+            ${
+              job.tags.map(tag =>
+                `<span class="tag">${tag}</span>`
+              ).join("")
+            }
+
+          </div>
+
+
+          <div class="salary">
+
+            ${job.salary.toLocaleString("fr-FR")}
+            –
+            ${job.maxSalary.toLocaleString("fr-FR")}
+            € / an
+
+          </div>
+
+
+          <div class="job-footer">
+
+            <div class="date">
+
+              Publiée le
+              ${formatDate(job.date)}
+              ·
+              ${job.source}
+
+            </div>
+
+
+            <div class="job-actions">
+
+
+              <button
+                class="small-button ${
+                  isFavorite ? "favorite" : ""
+                }"
+                onclick="toggleFavorite(${job.id})">
+
+                ${
+                  isFavorite
+                  ? "★ Favori"
+                  : "☆ Favori"
+                }
+
+              </button>
+
+
+              <select
+                class="status-select"
+                onchange="setApplication(${job.id}, this.value)">
+
+                <option value="">
+                  Suivi
+                </option>
+
+                <option
+                  value="À contacter"
+                  ${application === "À contacter" ? "selected" : ""}>
+
+                  À contacter
+
+                </option>
+
+                <option
+                  value="Candidature envoyée"
+                  ${application === "Candidature envoyée" ? "selected" : ""}>
+
+                  Candidature envoyée
+
+                </option>
+
+                <option
+                  value="Entretien"
+                  ${application === "Entretien" ? "selected" : ""}>
+
+                  Entretien
+
+                </option>
+
+                <option
+                  value="Refus"
+                  ${application === "Refus" ? "selected" : ""}>
+
+                  Refus
+
+                </option>
+
+              </select>
+
+
+              <button
+                class="small-button primary"
+                onclick="viewJob(${job.id})">
+
+                Voir l'offre
+
+              </button>
+
+
+            </div>
+
+          </div>
+
+        </article>
+
+      `;
+
+    }).join("");
+
+}
+
+
+function toggleFavorite(id) {
+
+  if (favorites.includes(id)) {
+
+    favorites =
+      favorites.filter(
+        item => item !== id
+      );
+
+  } else {
+
+    favorites.push(id);
+
+  }
+
+
+  saveData();
+
+  searchJobs();
+
+}
+
+
+function setApplication(
+  id,
+  status
+) {
+
+  if (status === "") {
+
+    delete applications[id];
+
+  } else {
+
+    applications[id] = status;
+
+  }
+
+
+  saveData();
+
+  searchJobs();
+
+}
+
+
+function showFavorites() {
+
+  const results =
+    jobs.filter(
+      job => favorites.includes(job.id)
+    );
+
+
+  displayJobs(results);
+
+}
+
+
+function showApplications() {
+
+  const results =
+    jobs.filter(
+      job => applications[job.id]
+    );
+
+
+  displayJobs(results);
+
+}
+
+
+function showAll() {
+
+  searchJobs();
+
+}
+
+
+function viewJob(id) {
+
+  const job =
+    jobs.find(
+      item => item.id === id
+    );
+
+
+  alert(
+    "Offre de démonstration :\n\n" +
+    job.title +
+    "\n" +
+    job.company +
+    "\n\n" +
+    "La prochaine étape permettra " +
+    "d'ouvrir directement la vraie annonce."
+  );
+
+}
+
+
+function formatDate(date) {
+
+  return new Date(date)
+    .toLocaleDateString(
+      "fr-FR",
+      {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric"
+      }
+    );
+
+}
+
 
 function changeSort() {
 
   const value =
     document.getElementById("sortMobile").value;
 
-  document.getElementById("sort").value = value;
+  document.getElementById("sort").value =
+    value;
 
   searchJobs();
-}
-
-function formatDate(date) {
-
-  return new Date(date).toLocaleDateString(
-    "fr-FR",
-    {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric"
-    }
-  );
 
 }
 
-function favorite(index) {
 
-  alert("Fonction Favoris : prochaine étape de Job-Radar ⭐");
-
-}
-
-function viewJob(index) {
-
-  alert(
-    "Cette offre est actuellement une donnée de démonstration. " +
-    "La prochaine étape sera de connecter Job-Radar aux vraies offres."
-  );
-
-}
+updateStats();
 
 searchJobs();
 
 </script>
 
 </body>
-</html>
+  </html>

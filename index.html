@@ -482,7 +482,7 @@ select {
 
     <!-- Pastille Profil et Menu Déroulant (Haut Droite) -->
     <div class="profile-menu-container">
-      <div class="profile-avatar" onclick="toggleProfileMenu(event)" title="Mon Espace">
+      <div class="profile-avatar" id="profileAvatar" title="Mon Espace">
         👤
       </div>
       <div class="profile-dropdown" id="profileDropdown">
@@ -507,12 +507,12 @@ select {
 </div>
 
 <script>
-// Données factices des annonces
+// Données factices des annonces pour la page d'accueil
 const jobs = [
   {
     id: 1,
     title: "Responsable Expérience Client",
-    company: "Entreprise exemple",
+    company: "TechCorp Paris",
     location: "Paris",
     contract: "CDI",
     remote: "Oui",
@@ -527,7 +527,7 @@ const jobs = [
   {
     id: 2,
     title: "Responsable Satisfaction Client",
-    company: "Entreprise exemple",
+    company: "Inovium Group",
     location: "Île-de-France",
     contract: "CDI",
     remote: "Oui",
@@ -542,7 +542,7 @@ const jobs = [
   {
     id: 3,
     title: "Product Owner Data",
-    company: "Entreprise exemple",
+    company: "DataPulse",
     location: "Paris",
     contract: "CDI",
     remote: "Oui",
@@ -557,7 +557,7 @@ const jobs = [
   {
     id: 4,
     title: "Chef de Projet Expérience Client",
-    company: "Entreprise exemple",
+    company: "Symphony CX",
     location: "Boulogne-Billancourt",
     contract: "CDI",
     remote: "Oui",
@@ -603,21 +603,24 @@ function setActiveTab(tabId) {
   if (btn) btn.classList.add("active");
 }
 
-// Gestion fluide du menu déroulant profil
-function toggleProfileMenu(event) {
-  event.stopPropagation();
+// Gestion ultra-robuste du menu déroulant profil
+document.addEventListener("DOMContentLoaded", () => {
+  const avatar = document.getElementById("profileAvatar");
   const dropdown = document.getElementById("profileDropdown");
-  if (dropdown) {
-    dropdown.classList.toggle("open");
-  }
-}
 
-// Fermeture du menu si on clique en dehors
-document.addEventListener("click", (e) => {
-  const dropdown = document.getElementById("profileDropdown");
-  const container = document.querySelector(".profile-menu-container");
-  if (dropdown && container && !container.contains(e.target)) {
-    dropdown.classList.remove("open");
+  if (avatar && dropdown) {
+    avatar.addEventListener("click", (e) => {
+      e.stopPropagation();
+      dropdown.classList.toggle("open");
+    });
+
+    document.addEventListener("click", () => {
+      dropdown.classList.remove("open");
+    });
+
+    dropdown.addEventListener("click", (e) => {
+      e.stopPropagation();
+    });
   }
 });
 
@@ -625,7 +628,8 @@ document.addEventListener("click", (e) => {
 function renderSearchPage() {
   currentView = "search";
   setActiveTab("navSearch");
-  document.getElementById("viewSwitcher").style.display = "flex";
+  const switcher = document.getElementById("viewSwitcher");
+  if (switcher) switcher.style.display = "flex";
 
   const main = document.getElementById("mainContent");
   if (!main) return;
@@ -699,8 +703,10 @@ function renderSearchPage() {
 function showAlerts() {
   currentView = "alerts";
   document.querySelectorAll(".tab-button").forEach(btn => btn.classList.remove("active"));
-  document.getElementById("viewSwitcher").style.display = "none";
-  document.getElementById("profileDropdown").classList.remove("open");
+  const switcher = document.getElementById("viewSwitcher");
+  if (switcher) switcher.style.display = "none";
+  const dropdown = document.getElementById("profileDropdown");
+  if (dropdown) dropdown.classList.remove("open");
 
   const main = document.getElementById("mainContent");
   main.innerHTML = `
@@ -766,8 +772,10 @@ function testAlerteAgent() {
 function showProfile() {
   currentView = "profile";
   document.querySelectorAll(".tab-button").forEach(btn => btn.classList.remove("active"));
-  document.getElementById("viewSwitcher").style.display = "none";
-  document.getElementById("profileDropdown").classList.remove("open");
+  const switcher = document.getElementById("viewSwitcher");
+  if (switcher) switcher.style.display = "none";
+  const dropdown = document.getElementById("profileDropdown");
+  if (dropdown) dropdown.classList.remove("open");
 
   const main = document.getElementById("mainContent");
   main.innerHTML = `
@@ -781,6 +789,4 @@ function showProfile() {
       </div>
 
       <div style="margin-bottom: 14px;">
-        <label style="display: block; font-weight: 700; margin-bottom: 6px; font-size: 14px;">🎯 Postes / Missions recherchés</label>
-        <input id="targetInput" class="input" type="text" value="${userProfile.targetJobs}" placeholder="Ex: Chef de projet, Responsable...">
-      </div
+        <label style="display: block; font-weight: 700; margin-bottom: 6px; font-size: 14p

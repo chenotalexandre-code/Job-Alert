@@ -1,12 +1,798 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Job-Radar</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job-Radar</title>
+
+<style>
+:root {
+  --bg: #f5f7fb;
+  --card: #ffffff;
+  --text: #182230;
+  --muted: #667085;
+  --border: #e4e7ec;
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --green: #15803d;
+  --orange: #c2410c;
+  --shadow: 0 4px 18px rgba(16,24,40,.07);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+.header {
+  background: #111827;
+  color: white;
+  padding: 18px 20px;
+}
+
+.header-inner {
+  max-width: 1200px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.logo span {
+  color: #60a5fa;
+}
+
+.header-subtitle {
+  color: #cbd5e1;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 24px 16px 50px;
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 20px;
+}
+
+.sidebar {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px;
+  height: fit-content;
+  box-shadow: var(--shadow);
+}
+
+.nav-item {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  padding: 12px;
+  text-align: left;
+  border-radius: 9px;
+  color: #475467;
+  cursor: pointer;
+  margin-bottom: 3px;
+}
+
+.nav-item.active {
+  background: #eff6ff;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.main {
+  min-width: 0;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 27px;
+}
+
+.page-description {
+  color: var(--muted);
+  margin: 7px 0 20px;
+}
+
+.search-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: var(--shadow);
+  margin-bottom: 18px;
+}
+
+.search-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr auto;
+  gap: 10px;
+}
+
+.input,
+.select {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 0 12px;
+  background: white;
+  color: var(--text);
+}
+
+.search-button {
+  border: 0;
+  border-radius: 9px;
+  padding: 0 20px;
+  background: var(--primary);
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.search-button:hover {
+  background: var(--primary-dark);
+}
+
+.advanced {
+  margin-top: 12px;
+}
+
+.advanced summary {
+  cursor: pointer;
+  color: var(--primary);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.advanced-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.results-count {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.sort {
+  width: 190px;
+}
+
+.jobs {
+  display: grid;
+  gap: 12px;
+}
+
+.job {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: var(--shadow);
+}
+
+.job-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.job-title {
+  font-size: 18px;
+  font-weight: 750;
+  margin: 0 0 5px;
+}
+
+.company {
+  color: #475467;
+  font-size: 14px;
+}
+
+.score {
+  background: #ecfdf3;
+  color: var(--green);
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 20px;
+  padding: 7px 10px;
+  white-space: nowrap;
+  height: fit-content;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 14px 0;
+}
+
+.tag {
+  background: #f2f4f7;
+  color: #475467;
+  padding: 5px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.salary {
+  font-size: 15px;
+  font-weight: 750;
+  color: var(--green);
+}
+
+.job-footer {
+  border-top: 1px solid var(--border);
+  margin-top: 14px;
+  padding-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.date {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.job-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.small-button {
+  border: 1px solid var(--border);
+  background: white;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.small-button.primary {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.empty {
+  background: white;
+  border: 1px dashed var(--border);
+  border-radius: 14px;
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--muted);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.stat {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.stat-number {
+  font-size: 23px;
+  font-weight: 800;
+}
+
+.stat-label {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 3px;
+}
+
+@media (max-width: 800px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    display: flex;
+    overflow-x: auto;
+    gap: 4px;
+  }
+
+  .nav-item {
+    white-space: nowrap;
+    width: auto;
+  }
+
+  .search-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .advanced-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .container {
+    padding: 18px 10px 40px;
+  }
+
+  .header {
+    padding: 15px;
+  }
+
+  .page-title {
+    font-size: 23px;
+  }
+
+  .advanced-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats {
+    gap: 6px;
+  }
+
+  .stat {
+    padding: 10px;
+  }
+
+  .stat-number {
+    font-size: 19px;
+  }
+
+  .job {
+    padding: 14px;
+  }
+
+  .job-top {
+    display: block;
+  }
+
+  .score {
+    display: inline-block;
+    margin-top: 10px;
+  }
+
+  .job-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .job-actions {
+    width: 100%;
+  }
+
+  .small-button {
+    flex: 1;
+  }
+}
+</style>
 </head>
+
 <body>
-  <h1>🎯 Job-Radar</h1>
-  <p>La plateforme fonctionne !</p>
+
+<header class="header">
+  <div class="header-inner">
+    <div>
+      <div class="logo">🎯 Job-<span>Radar</span></div>
+      <div class="header-subtitle">Ta veille emploi, centralisée et personnalisée</div>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="dashboard">
+
+    <aside class="sidebar">
+      <button class="nav-item active">🔎 Recherche</button>
+      <button class="nav-item">⭐ Favoris</button>
+      <button class="nav-item">📋 Candidatures</button>
+      <button class="nav-item">⚙️ Préférences</button>
+    </aside>
+
+    <main class="main">
+
+      <h1 class="page-title">Trouver ton prochain poste</h1>
+
+      <p class="page-description">
+        Recherche, filtre et compare les opportunités qui correspondent à tes critères.
+      </p>
+
+      <section class="stats">
+        <div class="stat">
+          <div class="stat-number" id="totalJobs">0</div>
+          <div class="stat-label">offres trouvées</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-number">3</div>
+          <div class="stat-label">sources prévues</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-number">0</div>
+          <div class="stat-label">favoris</div>
+        </div>
+      </section>
+
+      <section class="search-card">
+
+        <div class="search-grid">
+
+          <input
+            id="search"
+            class="input"
+            placeholder="Poste, compétence, mot-clé..."
+          >
+
+          <input
+            id="location"
+            class="input"
+            placeholder="Localisation"
+          >
+
+          <input
+            id="minSalary"
+            class="input"
+            type="number"
+            placeholder="Salaire min. €"
+          >
+
+          <button class="search-button" onclick="searchJobs()">
+            Rechercher
+          </button>
+
+        </div>
+
+        <details class="advanced">
+          <summary>Filtres avancés</summary>
+
+          <div class="advanced-grid">
+
+            <input
+              id="company"
+              class="input"
+              placeholder="Entreprise"
+            >
+
+            <select id="contract" class="select">
+              <option value="">Contrat</option>
+              <option value="CDI">CDI</option>
+              <option value="CDD">CDD</option>
+              <option value="Freelance">Freelance</option>
+            </select>
+
+            <select id="remote" class="select">
+              <option value="">Télétravail</option>
+              <option value="Oui">Télétravail possible</option>
+              <option value="Non">Pas de télétravail</option>
+            </select>
+
+            <select id="sort" class="select" onchange="searchJobs()">
+              <option value="score">Pertinence</option>
+              <option value="date">Plus récentes</option>
+              <option value="salary">Salaire décroissant</option>
+            </select>
+
+          </div>
+
+        </details>
+
+      </section>
+
+      <div class="results-header">
+        <div class="results-count" id="resultsCount"></div>
+
+        <select id="sortMobile" class="select sort" onchange="changeSort()">
+          <option value="score">Pertinence</option>
+          <option value="date">Plus récentes</option>
+          <option value="salary">Salaire décroissant</option>
+        </select>
+      </div>
+
+      <section id="jobs" class="jobs"></section>
+
+    </main>
+
+  </div>
+
+</div>
+
+<script>
+
+const jobs = [
+
+  {
+    title: "Responsable Expérience Client",
+    company: "Entreprise exemple",
+    location: "Paris",
+    contract: "CDI",
+    remote: "Oui",
+    salary: 65000,
+    maxSalary: 75000,
+    score: 96,
+    date: "2026-08-14",
+    tags: ["Expérience Client", "VoC", "Management"],
+    source: "Entreprise"
+  },
+
+  {
+    title: "Responsable Satisfaction Client",
+    company: "Entreprise exemple",
+    location: "Île-de-France",
+    contract: "CDI",
+    remote: "Oui",
+    salary: 60000,
+    maxSalary: 70000,
+    score: 92,
+    date: "2026-08-13",
+    tags: ["Customer Experience", "Management"],
+    source: "LinkedIn"
+  },
+
+  {
+    title: "Product Owner Data",
+    company: "Entreprise exemple",
+    location: "Paris",
+    contract: "CDI",
+    remote: "Oui",
+    salary: 55000,
+    maxSalary: 68000,
+    score: 84,
+    date: "2026-08-11",
+    tags: ["Product", "Data", "Agile"],
+    source: "France Travail"
+  },
+
+  {
+    title: "Chef de Projet Expérience Client",
+    company: "Entreprise exemple",
+    location: "Boulogne-Billancourt",
+    contract: "CDI",
+    remote: "Oui",
+    salary: 50000,
+    maxSalary: 60000,
+    score: 78,
+    date: "2026-08-09",
+    tags: ["CX", "Parcours Client", "Voix du Client"],
+    source: "LinkedIn"
+  }
+
+];
+
+function displayJobs(results) {
+
+  const container = document.getElementById("jobs");
+
+  document.getElementById("totalJobs").textContent = results.length;
+
+  document.getElementById("resultsCount").textContent =
+    results.length + " offre" + (results.length > 1 ? "s" : "") + " correspondant à tes critères";
+
+  if (results.length === 0) {
+    container.innerHTML = `
+      <div class="empty">
+        <strong>Aucune offre trouvée</strong>
+        <br>
+        <span>Essaie d'élargir tes critères de recherche.</span>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = results.map((job, index) => `
+
+    <article class="job">
+
+      <div class="job-top">
+
+        <div>
+          <h2 class="job-title">${job.title}</h2>
+          <div class="company">${job.company} · ${job.location}</div>
+        </div>
+
+        <div class="score">
+          ${job.score}% match
+        </div>
+
+      </div>
+
+      <div class="meta">
+
+        <span class="tag">${job.contract}</span>
+
+        <span class="tag">
+          ${job.remote === "Oui" ? "Télétravail" : "Sur site"}
+        </span>
+
+        ${job.tags.map(tag =>
+          `<span class="tag">${tag}</span>`
+        ).join("")}
+
+      </div>
+
+      <div class="salary">
+        ${job.salary.toLocaleString("fr-FR")}
+        – 
+        ${job.maxSalary.toLocaleString("fr-FR")} € / an
+      </div>
+
+      <div class="job-footer">
+
+        <div class="date">
+          Publiée le ${formatDate(job.date)} · ${job.source}
+        </div>
+
+        <div class="job-actions">
+
+          <button
+            class="small-button"
+            onclick="favorite(${index})">
+            ☆ Favori
+          </button>
+
+          <button
+            class="small-button primary"
+            onclick="viewJob(${index})">
+            Voir l'offre
+          </button>
+
+        </div>
+
+      </div>
+
+    </article>
+
+  `).join("");
+}
+
+function searchJobs() {
+
+  const search =
+    document.getElementById("search").value.toLowerCase();
+
+  const location =
+    document.getElementById("location").value.toLowerCase();
+
+  const company =
+    document.getElementById("company").value.toLowerCase();
+
+  const salary =
+    Number(document.getElementById("minSalary").value) || 0;
+
+  const contract =
+    document.getElementById("contract").value;
+
+  const remote =
+    document.getElementById("remote").value;
+
+  const sort =
+    document.getElementById("sort").value;
+
+  let results = jobs.filter(job => {
+
+    const text =
+      (job.title + " " + job.company + " " + job.tags.join(" "))
+      .toLowerCase();
+
+    return (
+      (!search || text.includes(search)) &&
+      (!location || job.location.toLowerCase().includes(location)) &&
+      (!company || job.company.toLowerCase().includes(company)) &&
+      (!salary || job.maxSalary >= salary) &&
+      (!contract || job.contract === contract) &&
+      (!remote || job.remote === remote)
+    );
+
+  });
+
+  sortResults(results, sort);
+
+  displayJobs(results);
+}
+
+function sortResults(results, sort) {
+
+  if (sort === "salary") {
+    results.sort((a, b) => b.salary - a.salary);
+  }
+
+  if (sort === "date") {
+    results.sort((a, b) =>
+      new Date(b.date) - new Date(a.date)
+    );
+  }
+
+  if (sort === "score") {
+    results.sort((a, b) => b.score - a.score);
+  }
+
+}
+
+function changeSort() {
+
+  const value =
+    document.getElementById("sortMobile").value;
+
+  document.getElementById("sort").value = value;
+
+  searchJobs();
+}
+
+function formatDate(date) {
+
+  return new Date(date).toLocaleDateString(
+    "fr-FR",
+    {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric"
+    }
+  );
+
+}
+
+function favorite(index) {
+
+  alert("Fonction Favoris : prochaine étape de Job-Radar ⭐");
+
+}
+
+function viewJob(index) {
+
+  alert(
+    "Cette offre est actuellement une donnée de démonstration. " +
+    "La prochaine étape sera de connecter Job-Radar aux vraies offres."
+  );
+
+}
+
+searchJobs();
+
+</script>
+
 </body>
 </html>

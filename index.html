@@ -66,7 +66,7 @@ select {
   color: #60a5fa;
 }
 
-/* Pastille Profil & Menu déroulant robuste */
+/* Pastille Profil & Menu déroulant ultra-robuste */
 .profile-menu-container {
   position: relative;
 }
@@ -84,12 +84,6 @@ select {
   cursor: pointer;
   font-size: 18px;
   padding: 0;
-  transition: background 0.2s, border-color 0.2s;
-}
-
-.profile-avatar:hover {
-  background: #374151;
-  border-color: #60a5fa;
 }
 
 .profile-dropdown {
@@ -103,7 +97,7 @@ select {
   box-shadow: 0 10px 30px rgba(0,0,0,0.25);
   width: 230px;
   display: none;
-  z-index: 9999;
+  z-index: 99999;
   overflow: hidden;
 }
 
@@ -124,7 +118,6 @@ select {
   font-size: 14px;
   font-weight: 600;
   color: var(--text);
-  transition: background 0.15s;
 }
 
 .dropdown-item:hover {
@@ -138,7 +131,6 @@ select {
   padding: 24px 16px 50px;
 }
 
-/* Barre de navigation centrale (Recherche / Favoris) */
 .view-switcher {
   display: flex;
   justify-content: center;
@@ -156,12 +148,6 @@ select {
   font-weight: 600;
   font-size: 14px;
   box-shadow: var(--shadow);
-  transition: all 0.2s;
-}
-
-.tab-button:hover {
-  border-color: var(--primary);
-  color: var(--primary);
 }
 
 .tab-button.active {
@@ -476,12 +462,12 @@ select {
   <div class="header-inner">
     <div class="logo">🎯 Job-<span>Alert 2</span></div>
 
-    <!-- Pastille Profil et Menu Déroulant (Haut Droite) -->
+    <!-- Pastille Profil et Menu Déroulant -->
     <div class="profile-menu-container">
-      <button class="profile-avatar" onclick="toggleProfileMenu(event)" title="Mon Espace">
+      <button class="profile-avatar" id="avatarBtn" onclick="toggleProfileMenu(event)" title="Mon Espace">
         👤
       </button>
-      <div class="profile-dropdown" id="profileDropdown" onclick="event.stopPropagation()">
+      <div class="profile-dropdown" id="profileDropdown">
         <button class="dropdown-item" onclick="showProfile()">📄 Mon CV</button>
         <button class="dropdown-item" onclick="showApplications()">📋 Candidatures</button>
         <button class="dropdown-item" onclick="showAlerts()">🔔 Alertes</button>
@@ -491,19 +477,22 @@ select {
 </header>
 
 <div class="container">
-  <!-- Sélecteur central (Recherche / Favoris) en dessous du header -->
   <div class="view-switcher" id="viewSwitcher">
     <button class="tab-button active" id="navSearch" onclick="showAll()">🔎 Recherche</button>
     <button class="tab-button" id="navFavorites" onclick="showFavorites()">⭐ Favoris</button>
   </div>
 
-  <main class="main" id="mainContent">
-    <!-- Le contenu dynamique s'injecte ici -->
-  </main>
+  <main class="main" id="mainContent"></main>
 </div>
 
 <script>
-// Données factices des annonces pour la page d'accueil
+// Nettoyage automatique du stockage local s'il contenait des filtres bloquants pour les 4 annonces
+if (!localStorage.getItem("jobAlertResetV2")) {
+  localStorage.removeItem("jobAlertProfile");
+  localStorage.setItem("jobAlertResetV2", "true");
+}
+
+// Données des 4 annonces factices
 const jobs = [
   {
     id: 1,
@@ -573,15 +562,15 @@ let applications = JSON.parse(localStorage.getItem("jobAlertApplications") || "{
 let userProfile = {
   cvText: "Expérience en gestion de projet, relation client, satisfaction et management d'équipe.",
   targetJobs: "Responsable Expérience Client, Chef de Projet",
-  exclusions: "SSII, Prestation de service pure, 100% commercial terrain",
-  minSalary: 50000,
+  exclusions: "",
+  minSalary: 40000,
   ...JSON.parse(localStorage.getItem("jobAlertProfile") || "{}")
 };
 
 let alertConfig = {
   searchQuery: "Expérience Client",
   locationQuery: "Paris",
-  aiPrompt: "Analyse les offres et ne retiens que celles qui mettent en avant le management d'équipe et le télétravail hybride.",
+  aiPrompt: "Analyse les offres et ne retiens que celles qui mettent en avant le management d'équipe.",
   frequency: "Quotidienne",
   time: "20:00",
   ...JSON.parse(localStorage.getItem("jobAlertConfig") || "{}")
@@ -602,6 +591,7 @@ function setActiveTab(tabId) {
   if (btn) btn.classList.add("active");
 }
 
+// --- GESTION DU MENU DÉROULANT MOBILE ROBUSTE ---
 function toggleProfileMenu(event) {
   event.stopPropagation();
   const dropdown = document.getElementById("profileDropdown");
@@ -610,10 +600,13 @@ function toggleProfileMenu(event) {
   }
 }
 
-window.addEventListener("click", () => {
+window.addEventListener("click", (e) => {
   const dropdown = document.getElementById("profileDropdown");
-  if (dropdown) {
-    dropdown.classList.remove("open");
+  const avatar = document.getElementById("avatarBtn");
+  if (dropdown && dropdown.classList.contains("open")) {
+    if (!dropdown.contains(e.target) && !avatar.contains(e.target)) {
+      dropdown.classList.remove("open");
+    }
   }
 });
 
@@ -696,50 +689,33 @@ function showAlerts() {
   document.querySelectorAll(".tab-button").forEach(btn => btn.classList.remove("active"));
   const switcher = document.getElementById("viewSwitcher");
   if (switcher) switcher.style.display = "none";
-  const dropdown = document.getElementById("profileDropdown");
-  if (dropdown) dropdown.classList.remove("open");
+  document.getElementById("profileDropdown").classList.remove("open");
 
   const main = document.getElementById("mainContent");
   main.innerHTML = `
     <h1 class="page-title">Paramétrage des Alertes & Agent IA</h1>
-    <p class="page-description">Configure ta recherche automatisée et donne des instructions personnalisées à ton agent de recherche.</p>
+    <p class="page-description">Configure ta recherche automatisée et donne des instructions personnalisées.</p>
 
     <div class="alert-card">
       <div style="margin-bottom: 14px;">
         <label style="display: block; font-weight: 700; margin-bottom: 6px; font-size: 14px;">🔍 Recherche par mots-clés</label>
-        <input id="alertSearch" class="input" type="text" value="${alertConfig.searchQuery}" placeholder="Ex: Expérience Client, Product Owner...">
+        <input id="alertSearch" class="input" type="text" value="${alertConfig.searchQuery}">
       </div>
 
       <div style="margin-bottom: 14px;">
         <label style="display: block; font-weight: 700; margin-bottom: 6px; font-size: 14px;">📍 Localisation visée</label>
-        <input id="alertLocation" class="input" type="text" value="${alertConfig.locationQuery}" placeholder="Ex: Paris, Île-de-France, Remote...">
+        <input id="alertLocation" class="input" type="text" value="${alertConfig.locationQuery}">
       </div>
 
       <div style="margin-bottom: 14px;">
         <label style="display: block; font-weight: 700; margin-bottom: 6px; font-size: 14px;">🤖 Prompt personnalisé pour l'agent IA</label>
-        <textarea id="alertPrompt" class="textarea" placeholder="Ex: Sois très strict sur les salaires minimums...">${alertConfig.aiPrompt}</textarea>
-      </div>
-
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px;">
-        <div>
-          <label style="display: block; font-weight: 700; margin-bottom: 6px; font-size: 14px;">⏱️ Fréquence</label>
-          <select id="alertFrequency" class="select">
-            <option value="Quotidienne" ${alertConfig.frequency === "Quotidienne" ? "selected" : ""}>Quotidienne</option>
-            <option value="Hebdomadaire" ${alertConfig.frequency === "Hebdomadaire" ? "selected" : ""}>Hebdomadaire</option>
-          </select>
-        </div>
-        <div>
-          <label style="display: block; font-weight: 700; margin-bottom: 6px; font-size: 14px;">⏰ Horaire de l'alerte</label>
-          <input id="alertTime" class="input" type="time" value="${alertConfig.time}">
-        </div>
+        <textarea id="alertPrompt" class="textarea">${alertConfig.aiPrompt}</textarea>
       </div>
 
       <div style="display: flex; gap: 10px;">
         <button class="search-button" style="flex: 1; min-height: 48px;" onclick="saveAlertConfig()">Enregistrer l'alerte</button>
-        <button class="small-button" style="padding: 0 20px; font-weight: 700; background: #f2f4f7;" onclick="testAlerteAgent()">Tester l'agent</button>
       </div>
     </div>
-    
     <button class="small-button" onclick="renderSearchPage()" style="margin-top: 10px;">← Retour à la recherche</button>
   `;
 }
@@ -748,15 +724,8 @@ function saveAlertConfig() {
   alertConfig.searchQuery = document.getElementById("alertSearch").value;
   alertConfig.locationQuery = document.getElementById("alertLocation").value;
   alertConfig.aiPrompt = document.getElementById("alertPrompt").value;
-  alertConfig.frequency = document.getElementById("alertFrequency").value;
-  alertConfig.time = document.getElementById("alertTime").value;
-
   saveData();
-  alert("Paramètres d'alerte enregistrés avec succès !");
-}
-
-function testAlerteAgent() {
-  alert("🤖 Agent IA : J'ai bien pris en compte ton prompt !\n\n' " + document.getElementById("alertPrompt").value + " '\n\nJe scannerai les offres à " + document.getElementById("alertTime").value + " selon la fréquence " + document.getElementById("alertFrequency").value + ".");
+  alert("Alerte enregistrée !");
 }
 
 function showProfile() {
@@ -764,24 +733,59 @@ function showProfile() {
   document.querySelectorAll(".tab-button").forEach(btn => btn.classList.remove("active"));
   const switcher = document.getElementById("viewSwitcher");
   if (switcher) switcher.style.display = "none";
-  const dropdown = document.getElementById("profileDropdown");
-  if (dropdown) dropdown.classList.remove("open");
+  document.getElementById("profileDropdown").classList.remove("open");
 
   const main = document.getElementById("mainContent");
   main.innerHTML = `
     <h1 class="page-title">Mon Profil & CV</h1>
-    <p class="page-description">Ces informations permettent à l'IA d'analyser les offres et d'ajuster le scoring sur mesure.</p>
+    <p class="page-description">Modifie tes critères de scoring.</p>
 
     <div class="profile-card">
       <div style="margin-bottom: 14px;">
-        <label style="display: block; font-weight: 700; margin-bottom: 6px; font-size: 14px;">📄 Résumé de ton CV / Compétences clés</label>
-        <textarea id="cvInput" class="textarea" placeholder="Colle ton CV ou décris tes compétences...">${userProfile.cvText}</textarea>
+        <label style="display: block; font-weight: 700; margin-bottom: 6px; font-size: 14px;">📄 CV / Compétences clés</label>
+        <textarea id="cvInput" class="textarea">${userProfile.cvText}</textarea>
       </div>
 
       <div style="margin-bottom: 14px;">
-        <label style="display: block; font-weight: 700; margin-bottom: 6px; font-size: 14px;">🎯 Postes / Missions recherchés</label>
-        <input id="targetInput" class="input" type="text" value="${userProfile.targetJobs}" placeholder="Ex: Chef de projet, Responsable...">
+        <label style="display: block; font-weight: 700; margin-bottom: 6px; font-size: 14px;">❌ Exclusions</label>
+        <input id="exclusionInput" class="input" type="text" value="${userProfile.exclusions}">
       </div>
 
-      <div style="margin-bottom: 14px;">
-        <label style="display: bl
+      <div style="margin-bottom: 18px;">
+        <label style="display: block; font-weight: 700; margin-bottom: 6px; font-size: 14px;">💰 Salaire min. (€)</label>
+        <input id="salaryInput" class="input" type="number" value="${userProfile.minSalary}">
+      </div>
+
+      <button class="search-button" style="width: 100%; min-height: 48px;" onclick="saveProfileData()">Enregistrer mon profil</button>
+    </div>
+    <button class="small-button" onclick="renderSearchPage()" style="margin-top: 10px;">← Retour à la recherche</button>
+  `;
+}
+
+function saveProfileData() {
+  userProfile.cvText = document.getElementById("cvInput").value;
+  userProfile.exclusions = document.getElementById("exclusionInput").value;
+  userProfile.minSalary = Number(document.getElementById("salaryInput").value) || 0;
+  saveData();
+  alert("Profil enregistré !");
+  renderSearchPage();
+}
+
+function searchJobs() {
+  if (currentView !== "search") return;
+
+  const search = document.getElementById("search") ? document.getElementById("search").value.toLowerCase() : "";
+  const location = document.getElementById("location") ? document.getElementById("location").value.toLowerCase() : "";
+  const company = document.getElementById("company") ? document.getElementById("company").value.toLowerCase() : "";
+  const salary = document.getElementById("minSalary") ? Number(document.getElementById("minSalary").value) || 0 : 0;
+  const contract = document.getElementById("contract") ? document.getElementById("contract").value : "";
+  const remote = document.getElementById("remote") ? document.getElementById("remote").value : "";
+  const sort = document.getElementById("sort") ? document.getElementById("sort").value : "score";
+
+  let results = jobs.filter(job => {
+    const text = (job.title + " " + job.company + " " + job.tags.join(" ")).toLowerCase();
+    
+    const exclusionsVal = userProfile.exclusions || "";
+    const exclusionWords = exclusionsVal.toLowerCase().split(",").map(w => w.trim()).filter(Boolean);
+    const hasExcludedWord = exclusionWords.some(word => text.includes(word));
+    if (hasExcludedWord) retur

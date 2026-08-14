@@ -486,10 +486,9 @@ select {
         👤
       </div>
       <div class="profile-dropdown" id="profileDropdown">
-        <button class="dropdown-item" onclick="showApplications()">📋 Suivi Candidatures</button>
-        <button class="dropdown-item" onclick="showAlerts()">🔔 Alertes & Agent IA</button>
-        <div class="dropdown-divider"></div>
-        <button class="dropdown-item" onclick="showProfile()">⚙️ Mon Profil & CV</button>
+        <button class="dropdown-item" onclick="showProfile()">📄 Mon CV</button>
+        <button class="dropdown-item" onclick="showApplications()">📋 Candidatures</button>
+        <button class="dropdown-item" onclick="showAlerts()">🔔 Alertes</button>
       </div>
     </div>
   </div>
@@ -604,15 +603,17 @@ function setActiveTab(tabId) {
   if (btn) btn.classList.add("active");
 }
 
-// Gestion du menu déroulant profil corrigée
+// Gestion fluide du menu déroulant profil
 function toggleProfileMenu(event) {
   event.stopPropagation();
   const dropdown = document.getElementById("profileDropdown");
-  dropdown.classList.toggle("open");
+  if (dropdown) {
+    dropdown.classList.toggle("open");
+  }
 }
 
-// Fermeture sécurisée du menu déroulant si on clique en dehors
-window.addEventListener("click", (e) => {
+// Fermeture du menu si on clique en dehors
+document.addEventListener("click", (e) => {
   const dropdown = document.getElementById("profileDropdown");
   const container = document.querySelector(".profile-menu-container");
   if (dropdown && container && !container.contains(e.target)) {
@@ -719,7 +720,7 @@ function showAlerts() {
 
       <div style="margin-bottom: 14px;">
         <label style="display: block; font-weight: 700; margin-bottom: 6px; font-size: 14px;">🤖 Prompt personnalisé pour l'agent IA</label>
-        <textarea id="alertPrompt" class="textarea" placeholder="Ex: Sois très strict sur les salaires minimums et privilégie les entreprises éco-responsables...">${alertConfig.aiPrompt}</textarea>
+        <textarea id="alertPrompt" class="textarea" placeholder="Ex: Sois très strict sur les salaires minimums...">${alertConfig.aiPrompt}</textarea>
       </div>
 
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px;">
@@ -770,7 +771,7 @@ function showProfile() {
 
   const main = document.getElementById("mainContent");
   main.innerHTML = `
-    <h1 class="page-title">Mon Profil & Préférences</h1>
+    <h1 class="page-title">Mon Profil & CV</h1>
     <p class="page-description">Ces informations permettent à l'IA d'analyser les offres et d'ajuster le scoring sur mesure.</p>
 
     <div class="profile-card">
@@ -781,4 +782,5 @@ function showProfile() {
 
       <div style="margin-bottom: 14px;">
         <label style="display: block; font-weight: 700; margin-bottom: 6px; font-size: 14px;">🎯 Postes / Missions recherchés</label>
-        <input id="targetInput
+        <input id="targetInput" class="input" type="text" value="${userProfile.targetJobs}" placeholder="Ex: Chef de projet, Responsable...">
+      </div

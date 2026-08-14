@@ -789,3 +789,112 @@ function searchJobs() {
     const exclusionWords = exclusionsVal.toLowerCase().split(",").map(w => w.trim()).filter(Boolean);
     const hasExcludedWord = exclusionWords.some(word => text.includes(word));
     if (hasExcludedWord) retur
+    
+    return (
+      (!search || text.includes(search)) &&
+      (!location || job.location.toLowerCase().includes(location)) &&
+      (!company || job.company.toLowerCase().includes(company)) &&
+      (!salary || job.maxSalary >= salary) &&
+      (!contract || job.contract === contract) &&
+      (!remote || job.remote === remote)
+    );
+  });
+
+  if (sort === "salary") results.sort((a,b) => b.salary - a.salary);
+  if (sort === "date") results.sort((a,b) => new Date(b.date) - new Date(a.date));
+  if (sort === "score") results.sort((a,b) => b.score - a.score);
+
+  displayJobs(results);
+}
+
+function displayJobs(results) {
+  const container = document.getElementById("jobs");
+  if (!container) return;
+
+  document.getElementById("totalJobs").textContent = results.length;
+  document.getElementById("resultsCount").textContent = results.length + " offre" + (results.length > 1 ? "s" : "");
+
+  if (results.length === 0) {
+    container.innerHTML = `<div class="empty"><strong>Aucune offre trouvée</strong><br><span>Modifie tes critères ou ton salaire minimum.</span></div>`;
+    return;
+  }
+
+  container.innerHTML = results.map(job => {
+    const isFavorite = favorites.includes(job.id);
+    const application = applications[job.id] || "";
+
+    return `
+      <article class="job">
+        <div class="job-top">
+          <div>
+            <h2 class="job-title">${job.title}</h2>
+            <div class="company">${job.company} · ${job.location}</div>
+          </div>
+          <div class="score">${job.score}% match</div>
+        </div>
+        <div class="meta">
+          <span class="tag">${job.contract}</span>
+          <span class="tag">${job.remote === "Oui" ? "Télétravail" : "Sur site"}</span>
+          ${job.tags.map(tag => `<span class="tag">${tag}</span>`).join("")}
+        </div>
+        <div class="salary">${job.salary.toLocaleString("fr-FR")} – ${job.maxSalary.toLocaleString("fr-FR")} € / an</div>
+        <div class="ai-advice">${job.aiAdvice}</div>
+        <div class="job-footer">
+          <div class="date">Publiée le ${job.date} · ${job.source}</div>
+          <div class="job-actions">
+            <button class="small-button ${isFavorite ? "favorite" : ""}" onclick="toggleFavorite(${job.id})">${isFavorite ? "★ Favori" : "☆ Favori"}</button>
+            <select class="status-select" onchange="setApplication(${job.id}, this.value)">
+              <option value="">Suivi</option>
+              <option value="À contacter" ${application === "À contacter" ? "selected" : ""}>À contacter</option>
+              <option value="Candidature envoyée" ${application === "Candidature envoyée" ? "selected" : ""}>Candidature envoyée</option>
+              <option value="Entretien" ${application === "Entretien" ? "selected" : ""}>Entretien</option>
+            </select>
+          </div>
+        </div>
+      </article>
+    `;
+  }).join("");
+}
+
+function toggleFavorite(id) {
+  if (favorites.includes(id)) {
+    favorites = favorites.filter(item => item !== id);
+  } else {
+    favorites.push(id);
+  }
+  saveData();
+  if (currentView === "search") searchJobs();
+  if (currentView === "favorites") showFavorites();
+  document.getElementById("favoriteCount").textContent = favorites.length;
+}
+
+function setApplication(id, status) {
+  if (status === "") delete applications[id];
+  else applications[id] = status;
+  saveData();
+  document.getElementById("applicationCount").textContent = Object.keys(applications).length;
+}
+
+function showFavorites() {
+  currentView = "favorites";
+  setActiveTab("navFavorites");
+  document.getElementById("viewSwitcher").style.display = "flex";
+  document.getElementById("mainContent").innerHTML = `
+    <h1 class="page-title">Mes Offres Favorites</h1>
+    <p class="page-description">Retrouve tes annonces sauvegardées.</p>
+    <section id="jobs" class="jobs"></section>
+  `;
+  displayJobs(jobs.filter(job => favorites.includes(job.id)));
+}
+
+function showAll() { renderSearchPage(); }
+function changeSort() {
+  document.getElementById("sort").value = document.getElementById("sortMobile").value;
+  searchJobs();
+}
+
+renderSearchPage();
+</script>
+
+</body>
+</html>

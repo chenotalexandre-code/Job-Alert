@@ -275,6 +275,17 @@ select {
   font-size: 15px;
   font-weight: 750;
   color: var(--green);
+  margin-bottom: 10px;
+}
+
+.ai-advice {
+  background: #ecfdf3;
+  border-left: 4px solid var(--green);
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--green);
+  margin-bottom: 14px;
 }
 
 .job-footer {
@@ -497,7 +508,8 @@ const jobs = [
     score: 96,
     date: "2026-08-14",
     tags: ["Expérience Client", "VoC", "Management"],
-    source: "Entreprise"
+    source: "Entreprise",
+    aiAdvice: "💡 Conseil IA : 'Je dois impérativement postuler (forte coïncidence avec ton CV)'"
   },
   {
     id: 2,
@@ -511,7 +523,8 @@ const jobs = [
     score: 92,
     date: "2026-08-13",
     tags: ["Customer Experience", "Management"],
-    source: "LinkedIn"
+    source: "LinkedIn",
+    aiAdvice: "💡 Conseil IA : 'Tente ta chance, profil très recherché sur ce secteur'"
   },
   {
     id: 3,
@@ -525,7 +538,8 @@ const jobs = [
     score: 84,
     date: "2026-08-11",
     tags: ["Product", "Data", "Agile"],
-    source: "France Travail"
+    source: "France Travail",
+    aiAdvice: "💡 Conseil IA : 'Bon match technique, quelques compétences à valoriser'"
   },
   {
     id: 4,
@@ -539,7 +553,8 @@ const jobs = [
     score: 78,
     date: "2026-08-09",
     tags: ["CX", "Parcours Client", "Voix du Client"],
-    source: "LinkedIn"
+    source: "LinkedIn",
+    aiAdvice: "💡 Conseil IA : 'Opportunité intéressante à explorer en backup'"
   }
 ];
 
@@ -622,6 +637,10 @@ function displayJobs(results) {
           ${job.salary.toLocaleString("fr-FR")} – ${job.maxSalary.toLocaleString("fr-FR")} € / an
         </div>
 
+        <div class="ai-advice">
+          ${job.aiAdvice}
+        </div>
+
         <div class="job-footer">
           <div class="date">Publiée le ${formatDate(job.date)} · ${job.source}</div>
           <div class="job-actions">
@@ -700,7 +719,7 @@ function showAll() {
 
 function viewJob(id) {
   const job = jobs.find(item => item.id === id);
-  alert("Offre de démonstration :\n\n" + job.title + "\n" + job.company);
+  alert("Offre de démonstration :\n\n" + job.title + "\n" + job.company + "\n\n" + job.aiAdvice);
 }
 
 function formatDate(date) {
@@ -718,5 +737,4 @@ searchJobs();
 </script>
 
 </body>
-  </html>
-  
+</html>

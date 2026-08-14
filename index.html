@@ -54,49 +54,15 @@ select {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 15px;
-}
-
-.logo-area {
-  display: flex;
-  align-items: center;
-  gap: 20px;
 }
 
 .logo {
   font-size: 20px;
   font-weight: 800;
+  white-space: nowrap;
 }
 
 .logo span {
-  color: #60a5fa;
-}
-
-.header-nav {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-}
-
-.header-tab {
-  background: transparent;
-  border: 0;
-  color: #cbd5e1;
-  padding: 8px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 14px;
-  transition: all 0.2s;
-}
-
-.header-tab:hover {
-  background: #1f2937;
-  color: white;
-}
-
-.header-tab.active {
-  background: #1e3a8a;
   color: #60a5fa;
 }
 
@@ -105,34 +71,35 @@ select {
   position: relative;
 }
 
-.profile-pill {
+.profile-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #1f2937;
+  border: 2px solid #374151;
+  color: white;
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: #1f2937;
-  border: 1px solid #374151;
-  color: white;
-  padding: 6px 14px;
-  border-radius: 24px;
+  justify-content: center;
   cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  transition: background 0.2s;
+  font-size: 18px;
+  transition: background 0.2s, border-color 0.2s;
 }
 
-.profile-pill:hover {
+.profile-avatar:hover {
   background: #374151;
+  border-color: #60a5fa;
 }
 
 .profile-dropdown {
   position: absolute;
   right: 0;
-  top: 45px;
+  top: 50px;
   background: white;
   color: var(--text);
   border: 1px solid var(--border);
   border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
   width: 230px;
   display: none;
   z-index: 1100;
@@ -173,6 +140,38 @@ select {
   max-width: 1200px;
   margin: auto;
   padding: 24px 16px 50px;
+}
+
+/* Barre de navigation centrale (Recherche / Favoris) */
+.view-switcher {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.tab-button {
+  background: white;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 10px 24px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: var(--shadow);
+  transition: all 0.2s;
+}
+
+.tab-button:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.tab-button.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
 }
 
 .main {
@@ -432,9 +431,6 @@ select {
   .advanced-grid {
     grid-template-columns: 1fr 1fr;
   }
-  .header-inner {
-    flex-wrap: wrap;
-  }
 }
 
 @media (max-width: 500px) {
@@ -482,19 +478,12 @@ select {
 
 <header class="header">
   <div class="header-inner">
-    <div class="logo-area">
-      <div class="logo">🎯 Job-<span>Alert</span></div>
-      <nav class="header-nav">
-        <button class="header-tab active" id="navSearch" onclick="showAll()">🔎 Recherche</button>
-        <button class="header-tab" id="navFavorites" onclick="showFavorites()">⭐ Favoris</button>
-      </nav>
-    </div>
+    <div class="logo">🎯 Job-<span>Alert</span></div>
 
-    <!-- Pastille Profil et Menu Déroulant -->
+    <!-- Pastille Profil et Menu Déroulant (Haut Droite) -->
     <div class="profile-menu-container">
-      <div class="profile-pill" onclick="toggleProfileMenu(event)">
-        <span>👤 Mon Espace</span>
-        <span style="font-size: 10px;">▼</span>
+      <div class="profile-avatar" onclick="toggleProfileMenu(event)" title="Mon Espace">
+        👤
       </div>
       <div class="profile-dropdown" id="profileDropdown">
         <button class="dropdown-item" onclick="showApplications()">📋 Suivi Candidatures</button>
@@ -507,6 +496,12 @@ select {
 </header>
 
 <div class="container">
+  <!-- Sélecteur central (Recherche / Favoris) en dessous du header -->
+  <div class="view-switcher" id="viewSwitcher">
+    <button class="tab-button active" id="navSearch" onclick="showAll()">🔎 Recherche</button>
+    <button class="tab-button" id="navFavorites" onclick="showFavorites()">⭐ Favoris</button>
+  </div>
+
   <main class="main" id="mainContent">
     <!-- Le contenu dynamique s'injecte ici -->
   </main>
@@ -603,23 +598,24 @@ function saveData() {
   localStorage.setItem("jobAlertConfig", JSON.stringify(alertConfig));
 }
 
-function setActiveNav(navId) {
-  document.querySelectorAll(".header-tab").forEach(btn => btn.classList.remove("active"));
-  const btn = document.getElementById(navId);
+function setActiveTab(tabId) {
+  document.querySelectorAll(".tab-button").forEach(btn => btn.classList.remove("active"));
+  const btn = document.getElementById(tabId);
   if (btn) btn.classList.add("active");
 }
 
-// Gestion du menu déroulant profil
+// Gestion du menu déroulant profil corrigée
 function toggleProfileMenu(event) {
   event.stopPropagation();
   const dropdown = document.getElementById("profileDropdown");
   dropdown.classList.toggle("open");
 }
 
-// Fermer le menu déroulant si on clique en dehors
-window.addEventListener("click", () => {
+// Fermeture sécurisée du menu déroulant si on clique en dehors
+window.addEventListener("click", (e) => {
   const dropdown = document.getElementById("profileDropdown");
-  if (dropdown && dropdown.classList.contains("open")) {
+  const container = document.querySelector(".profile-menu-container");
+  if (dropdown && container && !container.contains(e.target)) {
     dropdown.classList.remove("open");
   }
 });
@@ -627,7 +623,8 @@ window.addEventListener("click", () => {
 // 1. PAGE DE RECHERCHE & HOME PAGE
 function renderSearchPage() {
   currentView = "search";
-  setActiveNav("navSearch");
+  setActiveTab("navSearch");
+  document.getElementById("viewSwitcher").style.display = "flex";
 
   const main = document.getElementById("mainContent");
   if (!main) return;
@@ -700,7 +697,9 @@ function renderSearchPage() {
 // 2. MENU ALERTES & AGENT IA
 function showAlerts() {
   currentView = "alerts";
-  document.querySelectorAll(".header-tab").forEach(btn => btn.classList.remove("active"));
+  document.querySelectorAll(".tab-button").forEach(btn => btn.classList.remove("active"));
+  document.getElementById("viewSwitcher").style.display = "none";
+  document.getElementById("profileDropdown").classList.remove("open");
 
   const main = document.getElementById("mainContent");
   main.innerHTML = `
@@ -742,6 +741,8 @@ function showAlerts() {
         <button class="small-button" style="padding: 0 20px; font-weight: 700; background: #f2f4f7;" onclick="testAlerteAgent()">Tester l'agent</button>
       </div>
     </div>
+    
+    <button class="small-button" onclick="renderSearchPage()" style="margin-top: 10px;">← Retour à la recherche</button>
   `;
 }
 
@@ -763,7 +764,9 @@ function testAlerteAgent() {
 // 3. MENU PROFIL & CV
 function showProfile() {
   currentView = "profile";
-  document.querySelectorAll(".header-tab").forEach(btn => btn.classList.remove("active"));
+  document.querySelectorAll(".tab-button").forEach(btn => btn.classList.remove("active"));
+  document.getElementById("viewSwitcher").style.display = "none";
+  document.getElementById("profileDropdown").classList.remove("open");
 
   const main = document.getElementById("mainContent");
   main.innerHTML = `
@@ -778,14 +781,4 @@ function showProfile() {
 
       <div style="margin-bottom: 14px;">
         <label style="display: block; font-weight: 700; margin-bottom: 6px; font-size: 14px;">🎯 Postes / Missions recherchés</label>
-        <input id="targetInput" class="input" type="text" value="${userProfile.targetJobs}" placeholder="Ex: Chef de projet, Responsable...">
-      </div>
-
-      <div style="margin-bottom: 14px;">
-        <label style="display: block; font-weight: 700; margin-bottom: 6px; font-size: 14px;">❌ Ce que tu NE veux pas (exclusions)</label>
-        <input id="exclusionInput" class="input" type="text" value="${userProfile.exclusions}" placeholder="Ex: SSII, 100% présentiel...">
-      </div>
-
-      <div style="margin-bottom: 18px;">
-        <label style="display: block; font-weight: 700; margin-bottom: 6px; font-size: 14px;">💰 Salaire minimum annuel (€)</label>
-        <input id="salaryInput" class="input" type="number" value="${userProfile.
+        <input id="targetInput

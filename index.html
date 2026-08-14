@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Job Alert</title>
+<title>Job Alert 2</title>
 
 <style>
 :root {
@@ -474,7 +474,7 @@ select {
 
 <header class="header">
   <div class="header-inner">
-    <div class="logo">🎯 Job-<span>Alert</span></div>
+    <div class="logo">🎯 Job-<span>Alert 2</span></div>
 
     <!-- Pastille Profil et Menu Déroulant (Haut Droite) -->
     <div class="profile-menu-container">
@@ -570,7 +570,6 @@ const jobs = [
 let favorites = JSON.parse(localStorage.getItem("jobAlertFavorites") || "[]");
 let applications = JSON.parse(localStorage.getItem("jobAlertApplications") || "{}");
 
-// Chargement sécurisé avec valeurs par défaut pour éviter tout plantage si le localStorage était incomplet
 let userProfile = {
   cvText: "Expérience en gestion de projet, relation client, satisfaction et management d'équipe.",
   targetJobs: "Responsable Expérience Client, Chef de Projet",
@@ -603,7 +602,6 @@ function setActiveTab(tabId) {
   if (btn) btn.classList.add("active");
 }
 
-// --- GESTION DU MENU PROFIL ---
 function toggleProfileMenu(event) {
   event.stopPropagation();
   const dropdown = document.getElementById("profileDropdown");
@@ -612,7 +610,6 @@ function toggleProfileMenu(event) {
   }
 }
 
-// Fermeture automatique du menu au clic en dehors
 window.addEventListener("click", () => {
   const dropdown = document.getElementById("profileDropdown");
   if (dropdown) {
@@ -620,7 +617,6 @@ window.addEventListener("click", () => {
   }
 });
 
-// 1. PAGE DE RECHERCHE & HOME PAGE
 function renderSearchPage() {
   currentView = "search";
   setActiveTab("navSearch");
@@ -695,7 +691,6 @@ function renderSearchPage() {
   searchJobs();
 }
 
-// 2. MENU ALERTES & AGENT IA
 function showAlerts() {
   currentView = "alerts";
   document.querySelectorAll(".tab-button").forEach(btn => btn.classList.remove("active"));
@@ -764,7 +759,6 @@ function testAlerteAgent() {
   alert("🤖 Agent IA : J'ai bien pris en compte ton prompt !\n\n' " + document.getElementById("alertPrompt").value + " '\n\nJe scannerai les offres à " + document.getElementById("alertTime").value + " selon la fréquence " + document.getElementById("alertFrequency").value + ".");
 }
 
-// 3. MENU PROFIL & CV
 function showProfile() {
   currentView = "profile";
   document.querySelectorAll(".tab-button").forEach(btn => btn.classList.remove("active"));
@@ -785,4 +779,9 @@ function showProfile() {
       </div>
 
       <div style="margin-bottom: 14px;">
-        <label style="display: block; font-weight: 700; margin-bottom: 6px; font-size:
+        <label style="display: block; font-weight: 700; margin-bottom: 6px; font-size: 14px;">🎯 Postes / Missions recherchés</label>
+        <input id="targetInput" class="input" type="text" value="${userProfile.targetJobs}" placeholder="Ex: Chef de projet, Responsable...">
+      </div>
+
+      <div style="margin-bottom: 14px;">
+        <label style="display: bl

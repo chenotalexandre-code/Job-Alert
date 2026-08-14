@@ -537,7 +537,8 @@ function saveData() {
 
 function setActiveNav(navId) {
   document.querySelectorAll(".nav-item").forEach(btn => btn.classList.remove("active"));
-  document.getElementById(navId).classList.add("active");
+  const activeBtn = document.getElementById(navId);
+  if (activeBtn) activeBtn.classList.add("active");
 }
 
 function renderSearchPage() {
@@ -545,6 +546,8 @@ function renderSearchPage() {
   setActiveNav("navSearch");
 
   const main = document.getElementById("mainContent");
+  if (!main) return;
+
   main.innerHTML = `
     <h1 class="page-title">Trouver ton prochain poste</h1>
     <p class="page-description">Recherche, filtre et compare les opportunités qui correspondent à tes critères.</p>
@@ -737,5 +740,4 @@ function searchJobs() {
     if (hasExcludedWord) return false;
 
     return (
-      (!search || text.includes(search)) &&
-      (!location || job.location.
+      (!s

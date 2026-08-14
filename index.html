@@ -33,6 +33,7 @@ body {
 
 button,
 input,
+textarea,
 select {
   font: inherit;
 }
@@ -144,7 +145,8 @@ select {
   margin-top: 3px;
 }
 
-.search-card {
+.search-card,
+.profile-card {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 14px;
@@ -160,14 +162,20 @@ select {
 }
 
 .input,
+.textarea,
 .select {
   width: 100%;
   min-height: 44px;
   border: 1px solid var(--border);
   border-radius: 9px;
-  padding: 0 12px;
+  padding: 10px 12px;
   background: white;
   color: var(--text);
+}
+
+.textarea {
+  min-height: 100px;
+  resize: vertical;
 }
 
 .search-button {
@@ -423,73 +431,14 @@ select {
 <div class="container">
   <div class="dashboard">
     <aside class="sidebar">
-      <button class="nav-item active" onclick="showAll()">🔎 Recherche</button>
-      <button class="nav-item" onclick="showFavorites()">⭐ Favoris</button>
-      <button class="nav-item" onclick="showApplications()">📋 Candidatures</button>
-      <button class="nav-item" onclick="alert('Les préférences seront ajoutées dans la prochaine étape.')">⚙️ Préférences</button>
+      <button class="nav-item active" id="navSearch" onclick="showAll()">🔎 Recherche</button>
+      <button class="nav-item" id="navFavorites" onclick="showFavorites()">⭐ Favoris</button>
+      <button class="nav-item" id="navApplications" onclick="showApplications()">📋 Candidatures</button>
+      <button class="nav-item" id="navProfile" onclick="showProfile()">⚙️ Mon Profil & CV</button>
     </aside>
 
-    <main class="main">
-      <h1 class="page-title">Trouver ton prochain poste</h1>
-      <p class="page-description">Recherche, filtre et compare les opportunités qui correspondent à tes critères.</p>
-
-      <section class="stats">
-        <div class="stat">
-          <div class="stat-number" id="totalJobs">0</div>
-          <div class="stat-label">offres affichées</div>
-        </div>
-        <div class="stat">
-          <div class="stat-number" id="favoriteCount">0</div>
-          <div class="stat-label">favoris</div>
-        </div>
-        <div class="stat">
-          <div class="stat-number" id="applicationCount">0</div>
-          <div class="stat-label">candidatures</div>
-        </div>
-      </section>
-
-      <section class="search-card">
-        <div class="search-grid">
-          <input id="search" class="input" placeholder="Poste, compétence, mot-clé..." oninput="searchJobs()">
-          <input id="location" class="input" placeholder="Localisation" oninput="searchJobs()">
-          <input id="minSalary" class="input" type="number" placeholder="Salaire min. €" oninput="searchJobs()">
-          <button class="search-button" onclick="searchJobs()">Rechercher</button>
-        </div>
-
-        <details class="advanced">
-          <summary>Filtres avancés</summary>
-          <div class="advanced-grid">
-            <input id="company" class="input" placeholder="Entreprise" oninput="searchJobs()">
-            <select id="contract" class="select" onchange="searchJobs()">
-              <option value="">Contrat</option>
-              <option value="CDI">CDI</option>
-              <option value="CDD">CDD</option>
-              <option value="Freelance">Freelance</option>
-            </select>
-            <select id="remote" class="select" onchange="searchJobs()">
-              <option value="">Télétravail</option>
-              <option value="Oui">Télétravail possible</option>
-              <option value="Non">Pas de télétravail</option>
-            </select>
-            <select id="sort" class="select" onchange="searchJobs()">
-              <option value="score">Pertinence</option>
-              <option value="date">Plus récentes</option>
-              <option value="salary">Salaire décroissant</option>
-            </select>
-          </div>
-        </details>
-      </section>
-
-      <div class="results-header">
-        <div class="results-count" id="resultsCount"></div>
-        <select id="sortMobile" class="select sort" onchange="changeSort()">
-          <option value="score">Pertinence</option>
-          <option value="date">Plus récentes</option>
-          <option value="salary">Salaire décroissant</option>
-        </select>
-      </div>
-
-      <section id="jobs" class="jobs"></section>
+    <main class="main" id="mainContent">
+      <!-- Le contenu dynamique sera injecté ici -->
     </main>
   </div>
 </div>
@@ -560,29 +509,161 @@ const jobs = [
 
 let favorites = JSON.parse(localStorage.getItem("jobAlertFavorites") || "[]");
 let applications = JSON.parse(localStorage.getItem("jobAlertApplications") || "{}");
+let userProfile = JSON.parse(localStorage.getItem("jobAlertProfile") || JSON.stringify({
+  cvText: "Expérience en gestion de projet, relation client, satisfaction et management d'équipe.",
+  targetJobs: "Responsable Expérience Client, Chef de Projet",
+  exclusions: "SSII, Prestation de service pure, 100% commercial terrain",
+  minSalary: 50000
+}));
+
+let currentView = "search";
 
 function saveData() {
   localStorage.setItem("jobAlertFavorites", JSON.stringify(favorites));
   localStorage.setItem("jobAlertApplications", JSON.stringify(applications));
-  updateStats();
+  localStorage.setItem("jobAlertProfile", JSON.stringify(userProfile));
 }
 
-function updateStats() {
-  document.getElementById("favoriteCount").textContent = favorites.length;
-  document.getElementById("applicationCount").textContent = Object.keys(applications).length;
+function setActiveNav(navId) {
+  document.querySelectorAll(".nav-item").forEach(btn => btn.classList.remove("active"));
+  document.getElementById(navId).classList.add("active");
+}
+
+function renderSearchPage() {
+  currentView = "search";
+  setActiveNav("navSearch");
+
+  const main = document.getElementById("mainContent");
+  main.innerHTML = `
+    <h1 class="page-title">Trouver ton prochain poste</h1>
+    <p class="page-description">Recherche, filtre et compare les opportunités qui correspondent à tes critères.</p>
+
+    <section class="stats">
+      <div class="stat">
+        <div class="stat-number" id="totalJobs">0</div>
+        <div class="stat-label">offres affichées</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number" id="favoriteCount">${favorites.length}</div>
+        <div class="stat-label">favoris</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number" id="applicationCount">${Object.keys(applications).length}</div>
+        <div class="stat-label">candidatures</div>
+      </div>
+    </section>
+
+    <section class="search-card">
+      <div class="search-grid">
+        <input id="search" class="input" placeholder="Poste, compétence, mot-clé..." oninput="searchJobs()">
+        <input id="location" class="input" placeholder="Localisation" oninput="searchJobs()">
+        <input id="minSalary" class="input" type="number" placeholder="Salaire min. €" oninput="searchJobs()">
+        <button class="search-button" onclick="searchJobs()">Rechercher</button>
+      </div>
+
+      <details class="advanced">
+        <summary>Filtres avancés</summary>
+        <div class="advanced-grid">
+          <input id="company" class="input" placeholder="Entreprise" oninput="searchJobs()">
+          <select id="contract" class="select" onchange="searchJobs()">
+            <option value="">Contrat</option>
+            <option value="CDI">CDI</option>
+            <option value="CDD">CDD</option>
+            <option value="Freelance">Freelance</option>
+          </select>
+          <select id="remote" class="select" onchange="searchJobs()">
+            <option value="">Télétravail</option>
+            <option value="Oui">Télétravail possible</option>
+            <option value="Non">Pas de télétravail</option>
+          </select>
+          <select id="sort" class="select" onchange="searchJobs()">
+            <option value="score">Pertinence</option>
+            <option value="date">Plus récentes</option>
+            <option value="salary">Salaire décroissant</option>
+          </select>
+        </div>
+      </details>
+    </section>
+
+    <div class="results-header">
+      <div class="results-count" id="resultsCount"></div>
+      <select id="sortMobile" class="select sort" onchange="changeSort()">
+        <option value="score">Pertinence</option>
+        <option value="date">Plus récentes</option>
+        <option value="salary">Salaire décroissant</option>
+      </select>
+    </div>
+
+    <section id="jobs" class="jobs"></section>
+  `;
+  searchJobs();
+}
+
+function showProfile() {
+  currentView = "profile";
+  setActiveNav("navProfile");
+
+  const main = document.getElementById("mainContent");
+  main.innerHTML = `
+    <h1 class="page-title">Mon Profil & Préférences</h1>
+    <p class="page-description">Ces informations permettent à l'IA d'analyser les offres et d'ajuster le scoring sur mesure.</p>
+
+    <div class="profile-card">
+      <div style="margin-bottom: 14px;">
+        <label style="display: block; font-weight: 700; margin-bottom: 6px; font-size: 14px;">📄 Résumé de ton CV / Compétences clés</label>
+        <textarea id="cvInput" class="textarea" placeholder="Colle ton CV ou décris tes compétences...">${userProfile.cvText}</textarea>
+      </div>
+
+      <div style="margin-bottom: 14px;">
+        <label style="display: block; font-weight: 700; margin-bottom: 6px; font-size: 14px;">🎯 Postes / Missions recherchés</label>
+        <input id="targetInput" class="input" type="text" value="${userProfile.targetJobs}" placeholder="Ex: Chef de projet, Responsable...">
+      </div>
+
+      <div style="margin-bottom: 14px;">
+        <label style="display: block; font-weight: 700; margin-bottom: 6px; font-size: 14px;">❌ Ce que tu NE veux pas (exclusions)</label>
+        <input id="exclusionInput" class="input" type="text" value="${userProfile.exclusions}" placeholder="Ex: SSII, 100% présentiel...">
+      </div>
+
+      <div style="margin-bottom: 18px;">
+        <label style="display: block; font-weight: 700; margin-bottom: 6px; font-size: 14px;">💰 Salaire minimum annuel (€)</label>
+        <input id="salaryInput" class="input" type="number" value="${userProfile.minSalary}">
+      </div>
+
+      <button class="search-button" style="width: 100%; min-height: 48px;" onclick="saveProfileData()">Enregistrer mon profil</button>
+    </div>
+  `;
+}
+
+function saveProfileData() {
+  userProfile.cvText = document.getElementById("cvInput").value;
+  userProfile.targetJobs = document.getElementById("targetInput").value;
+  userProfile.exclusions = document.getElementById("exclusionInput").value;
+  userProfile.minSalary = Number(document.getElementById("salaryInput").value) || 0;
+  
+  saveData();
+  alert("Profil enregistré avec succès ! Il sera pris en compte pour les recherches et l'IA.");
+  renderSearchPage();
 }
 
 function searchJobs() {
-  const search = document.getElementById("search").value.toLowerCase();
-  const location = document.getElementById("location").value.toLowerCase();
-  const company = document.getElementById("company").value.toLowerCase();
-  const salary = Number(document.getElementById("minSalary").value) || 0;
-  const contract = document.getElementById("contract").value;
-  const remote = document.getElementById("remote").value;
-  const sort = document.getElementById("sort").value;
+  if (currentView !== "search") return;
+
+  const search = document.getElementById("search") ? document.getElementById("search").value.toLowerCase() : "";
+  const location = document.getElementById("location") ? document.getElementById("location").value.toLowerCase() : "";
+  const company = document.getElementById("company") ? document.getElementById("company").value.toLowerCase() : "";
+  const salary = document.getElementById("minSalary") ? Number(document.getElementById("minSalary").value) || 0 : 0;
+  const contract = document.getElementById("contract") ? document.getElementById("contract").value : "";
+  const remote = document.getElementById("remote") ? document.getElementById("remote").value : "";
+  const sort = document.getElementById("sort") ? document.getElementById("sort").value : "score";
 
   let results = jobs.filter(job => {
     const text = (job.title + " " + job.company + " " + job.tags.join(" ")).toLowerCase();
+    
+    // Filtrage automatique des exclusions du profil
+    const exclusionWords = userProfile.exclusions.toLowerCase().split(",").map(w => w.trim()).filter(Boolean);
+    const hasExcludedWord = exclusionWords.some(word => text.includes(word));
+    if (hasExcludedWord) return false;
+
     return (
       (!search || text.includes(search)) &&
       (!location || job.location.toLowerCase().includes(location)) &&
@@ -605,11 +686,13 @@ function sortResults(results, sort) {
 
 function displayJobs(results) {
   const container = document.getElementById("jobs");
+  if (!container) return;
+
   document.getElementById("totalJobs").textContent = results.length;
   document.getElementById("resultsCount").textContent = results.length + " offre" + (results.length > 1 ? "s" : "") + " correspondant à tes critères";
 
   if (results.length === 0) {
-    container.innerHTML = `<div class="empty"><strong>Aucune offre trouvée</strong><br><span>Essaie d'élargir tes critères de recherche.</span></div>`;
+    container.innerHTML = `<div class="empty"><strong>Aucune offre trouvée</strong><br><span>Essaie d'élargir tes critères ou vérifie tes exclusions de profil.</span></div>`;
     return;
   }
 
@@ -672,7 +755,9 @@ function toggleFavorite(id) {
     favorites.push(id);
   }
   saveData();
-  searchJobs();
+  if (currentView === "search") searchJobs();
+  if (currentView === "favorites") showFavorites();
+  document.getElementById("favoriteCount").textContent = favorites.length;
 }
 
 function shareJob(id) {
@@ -683,58 +768,4 @@ function shareJob(id) {
     title: job.title,
     text: `Regarde cette offre d'emploi : ${job.title} chez ${job.company} (${job.location}) - Salaire : ${job.salary}€`,
     url: window.location.href
-  };
-
-  if (navigator.share) {
-    navigator.share(shareData).catch(() => {});
-  } else {
-    navigator.clipboard.writeText(`${shareData.text} - ${shareData.url}`);
-    alert("Lien de l'offre copié dans le presse-papier !");
-  }
-}
-
-function setApplication(id, status) {
-  if (status === "") {
-    delete applications[id];
-  } else {
-    applications[id] = status;
-  }
-  saveData();
-  searchJobs();
-}
-
-function showFavorites() {
-  const results = jobs.filter(job => favorites.includes(job.id));
-  displayJobs(results);
-}
-
-function showApplications() {
-  const results = jobs.filter(job => applications[job.id]);
-  displayJobs(results);
-}
-
-function showAll() {
-  searchJobs();
-}
-
-function viewJob(id) {
-  const job = jobs.find(item => item.id === id);
-  alert("Offre de démonstration :\n\n" + job.title + "\n" + job.company + "\n\n" + job.aiAdvice);
-}
-
-function formatDate(date) {
-  return new Date(date).toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric" });
-}
-
-function changeSort() {
-  const value = document.getElementById("sortMobile").value;
-  document.getElementById("sort").value = value;
-  searchJobs();
-}
-
-updateStats();
-searchJobs();
-</script>
-
-</body>
-</html>
+  

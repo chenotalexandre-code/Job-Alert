@@ -130,12 +130,6 @@ select {
   color: var(--primary);
 }
 
-.dropdown-divider {
-  height: 1px;
-  background: var(--border);
-  margin: 4px 0;
-}
-
 .container {
   max-width: 1200px;
   margin: auto;
@@ -482,10 +476,10 @@ select {
 
     <!-- Pastille Profil et Menu Déroulant (Haut Droite) -->
     <div class="profile-menu-container">
-      <div class="profile-avatar" id="profileAvatar" title="Mon Espace">
+      <div class="profile-avatar" onclick="toggleProfileMenu(event)" title="Mon Espace">
         👤
       </div>
-      <div class="profile-dropdown" id="profileDropdown">
+      <div class="profile-dropdown" id="profileDropdown" onclick="event.stopPropagation()">
         <button class="dropdown-item" onclick="showProfile()">📄 Mon CV</button>
         <button class="dropdown-item" onclick="showApplications()">📋 Candidatures</button>
         <button class="dropdown-item" onclick="showAlerts()">🔔 Alertes</button>
@@ -603,24 +597,20 @@ function setActiveTab(tabId) {
   if (btn) btn.classList.add("active");
 }
 
-// Gestion ultra-robuste du menu déroulant profil
-document.addEventListener("DOMContentLoaded", () => {
-  const avatar = document.getElementById("profileAvatar");
+// --- GESTION DU MENU PROFIL ---
+function toggleProfileMenu(event) {
+  event.stopPropagation();
   const dropdown = document.getElementById("profileDropdown");
+  if (dropdown) {
+    dropdown.classList.toggle("open");
+  }
+}
 
-  if (avatar && dropdown) {
-    avatar.addEventListener("click", (e) => {
-      e.stopPropagation();
-      dropdown.classList.toggle("open");
-    });
-
-    document.addEventListener("click", () => {
-      dropdown.classList.remove("open");
-    });
-
-    dropdown.addEventListener("click", (e) => {
-      e.stopPropagation();
-    });
+// Fermeture automatique du menu au clic en dehors
+window.addEventListener("click", () => {
+  const dropdown = document.getElementById("profileDropdown");
+  if (dropdown) {
+    dropdown.classList.remove("open");
   }
 });
 
@@ -789,4 +779,5 @@ function showProfile() {
       </div>
 
       <div style="margin-bottom: 14px;">
-        <label style="display: block; font-weight: 700; margin-bottom: 6px; font-size: 14p
+        <label style="display: block; font-weight: 700; margin-bottom: 6px; font-size: 14px;">🎯 Postes / Missions recherchés</label>
+        <input id="targetInput" class="input" type="text" value="${userProfile.targetJobs}" placeholder="Ex: Che

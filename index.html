@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Job Alert</title>
+<title>Job-Alert</title>
 <!-- Inclusion de PDF.js pour la lecture et le scan des fichiers PDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
@@ -27,7 +27,7 @@
 .application-row{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:14px 0;border-bottom:1px solid var(--border)}.application-row:last-child{border-bottom:0}.application-title{font-weight:700;margin-bottom:4px}.application-company{color:var(--muted);font-size:13px}.application-status{background:#eff6ff;color:var(--primary);border-radius:20px;padding:6px 10px;font-size:12px;font-weight:700}
 .empty{background:#fff;border:1px dashed var(--border);border-radius:14px;padding:40px 20px;text-align:center;color:var(--muted)}.profile-section-title{font-size:15px;font-weight:800;margin-bottom:12px}.field{margin-bottom:16px}.field label{display:block;font-weight:700;margin-bottom:6px;font-size:14px}
 .scan-status{font-size:13px;font-weight:700;color:var(--primary);margin-top:6px}
-/* Styles pour les pastilles de compétences interactives */
+/* Styles pastilles de compétences */
 .skills-container{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;margin-bottom:12px}
 .skill-pill{background:#eff6ff;color:var(--primary);border:1px solid #bfdbfe;padding:6px 12px;border-radius:20px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px}
 .skill-pill button{background:none;border:none;color:var(--primary);cursor:pointer;font-weight:bold;font-size:14px;padding:0;line-height:1}
@@ -138,28 +138,24 @@ const text=(job.title+" "+job.company+" "+job.location+" "+job.tags.join(" ")).t
 const exclusionWords=(userProfile.exclusions||"").toLowerCase().split(",").map(w=>w.trim()).filter(Boolean);
 if(exclusionWords.some(w=>text.includes(w)))return false;
 
-// Match basé sur le texte de recherche ou par défaut sur les compétences du profil si aucun mot-clé n'est tapé
-let matchesSearch = true;
-if(search) {
-  matchesSearch = text.includes(search);
-}
+if(search && !text.includes(search)) return false;
+if(location && !job.location.toLowerCase().includes(location)) return false;
+if(company && !job.company.toLowerCase().includes(company)) return false;
+if(salary && job.maxSalary < salary) return false;
+if(contract && job.contract !== contract) return false;
+if(remote && job.remote !== remote) return false;
 
-return (
-  matchesSearch &&
-  (!location||job.location.toLowerCase().includes(location)) &&
-  (!company||job.company.toLowerCase().includes(company)) &&
-  (!salary||job.maxSalary>=salary) &&
-  (!contract||job.contract===contract) &&
-  (!remote||job.remote===remote)
-);
+return true;
 });
 
-// Calcul dynamique du score de pertinence basé sur le nombre de compétences partagées
+// Calcul dynamique du score de pertinence basé sur les compétences du profil
 results.forEach(job => {
-  let matchedSkillsCount = userProfile.skills.filter(skill => 
-    job.tags.some(t => t.toLowerCase().includes(skill.toLowerCase())) || job.title.toLowerCase().includes(skill.toLowerCase())
-  ).length;
-  job.score = Math.min(99, 65 + (matchedSkillsCount * 10));
+  if(userProfile.skills && userProfile.skills.length > 0) {
+    let matchedSkillsCount = userProfile.skills.filter(skill => 
+      job.tags.some(t => t.toLowerCase().includes(skill.toLowerCase())) || job.title.toLowerCase().includes(skill.toLowerCase())
+    ).length;
+    job.score = Math.min(99, 65 + (matchedSkillsCount * 10));
+  }
 });
 
 if(sort==="salary")results.sort((a,b)=>b.salary-a.salary);
@@ -313,7 +309,7 @@ function parseAndSmartExtract(text) {
   let detectedSkills = [...userProfile.skills];
   const lower = cleanText.toLowerCase();
 
-  // Analyse intelligente par l'agent IA simulé
+  // Analyse intelligente par l'agent IA
   // 1. Détection de chiffres / métriques -> "Orienté résultats"
   if (/\d+%|\d+\s*k€|\d+\s*ke|chiffre|croissance|hausse|optimisation|ROI|KPI|chiffre d'affaires/i.test(text)) {
     if (!detectedSkills.includes("Orienté résultats")) detectedSkills.push("Orienté résultats");
@@ -368,7 +364,7 @@ html+='<br><button class="small-button" id="backApplicationsBtn">← Retour à l
 }
 function escapeHTML(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
 function changeSort(){const m=document.getElementById("sortMobile"),d=document.getElementById("sort");if(m&&d){d.value=m.value;searchJobs()}}
-function resetDemoData(){if(!confirm("Réinitialiser Job Alert ?\n\nCela supprimera les favoris, candidatures, profil et alertes enregistrés sur cet appareil."))return;["jobAlertFavorites","jobAlertApplications","jobAlertProfile","jobAlertConfig"].forEach(k=>localStorage.removeItem(k));location.reload()}
+function resetDemoData(){if(!confirm("Réinitialiser Job-Alert ?\n\nCela supprimera les favoris, candidatures, profil et alertes enregistrés sur cet appareil."))return;["jobAlertFavorites","jobAlertApplications","jobAlertProfile","jobAlertConfig"].forEach(k=>localStorage.removeItem(k));location.reload()}
 
 document.getElementById("navSearch").addEventListener("click",renderSearchPage);
 document.getElementById("navFavorites").addEventListener("click",showFavorites);

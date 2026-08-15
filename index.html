@@ -204,7 +204,7 @@ document.getElementById("mainContent").innerHTML=`
 <div class="profile-card">
   <div class="profile-section-title">🏷️ Mes compétences (Savoir-faire)</div>
   <p style="font-size:13px; color:var(--muted); margin-top:0;">
-    Gère tes pastilles de compétences ci-dessous, ou <span style="color:var(--primary); font-weight:bold; cursor:pointer; text-decoration:underline;" onclick="document.getElementById('cvFile').click()">clique ici pour charger ton CV</span>.
+    Gère tes pastilles de compétences ci-dessous pour affiner ta recherche.
   </p>
   
   <div id="skillsListContainer" class="skills-container"></div>
@@ -282,7 +282,7 @@ async function handlePdfAnalysis() {
     return;
   }
 
-  statusEl.textContent = "🔄 Analyse intelligente de votre CV en cours...";
+  statusEl.textContent = "🔄 Analyse intelligente et approfondie de votre CV en cours...";
 
   try {
     const arrayBuffer = await file.arrayBuffer();
@@ -303,7 +303,7 @@ async function handlePdfAnalysis() {
     }
 
     parseAndSmartExtract(fullText);
-    statusEl.textContent = "✅ Analyse réussie ! Vos compétences ont été remplies automatiquement ci-dessous.";
+    statusEl.textContent = `✅ Analyse robuste réussie ! ${userProfile.skills.length} compétences détectées.`;
   } catch (error) {
     console.error("Erreur lecture PDF:", error);
     statusEl.textContent = "❌ Erreur lors de la lecture du fichier PDF.";
@@ -317,24 +317,63 @@ function parseAndSmartExtract(text) {
   let detectedSkills = [...userProfile.skills];
   const lower = cleanText.toLowerCase();
 
-  if (/\d+%|\d+\s*k€|\d+\s*ke|chiffre|croissance|hausse|optimisation|ROI|KPI|chiffre d'affaires/i.test(text)) {
+  // Dictionnaire étendu et robuste pour extraire un maximum de compétences métiers, techniques et transverses
+  const skillDictionary = [
+    { keyword: "gestion de projet", label: "Gestion de projet" },
+    { keyword: "chef de projet", label: "Gestion de projet" },
+    { keyword: "project management", label: "Gestion de projet" },
+    { keyword: "expérience client", label: "Expérience Client" },
+    { keyword: "customer experience", label: "Expérience Client" },
+    { keyword: "cx", label: "Expérience Client" },
+    { keyword: "satisfaction client", label: "Satisfaction Client" },
+    { keyword: "relation client", label: "Relation Client" },
+    { keyword: "voix du client", label: "VoC" },
+    { keyword: "voc", label: "VoC" },
+    { keyword: "management", label: "Management" },
+    { keyword: "manager", label: "Management" },
+    { keyword: "leadership", label: "Leadership" },
+    { keyword: "équipe", label: "Management d'équipe" },
+    { keyword: "agile", label: "Agilité / Scrum" },
+    { keyword: "scrum", label: "Agilité / Scrum" },
+    { keyword: "data", label: "Data & Analytics" },
+    { keyword: "données", label: "Data & Analytics" },
+    { keyword: "analyse", label: "Analyse de données" },
+    { keyword: "kpi", label: "KPI & Pilotage" },
+    { keyword: "roi", label: "ROI & Performance" },
+    { keyword: "stratégie", label: "Stratégie" },
+    { keyword: "déploiement", label: "Déploiement de solutions" },
+    { keyword: "solution", label: "Déploiement de solutions" },
+    { keyword: "orienté résultats", label: "Orienté résultats" },
+    { keyword: "budget", label: "Gestion budgétaire" },
+    { keyword: "marketing", label: "Marketing" },
+    { keyword: "communication", label: "Communication" },
+    { keyword: "négociation", label: "Négociation" },
+    { keyword: "commercial", label: "Commerce" },
+    { keyword: "recrutement", label: "Recrutement" },
+    { keyword: "optimisation", label: "Optimisation de processus" },
+    { keyword: "processus", label: "Optimisation de processus" },
+    { keyword: "qualité", label: "Assurance Qualité" },
+    { keyword: "sql", label: "SQL" },
+    { keyword: "python", label: "Python" },
+    { keyword: "excel", label: "Excel Avancé" },
+    { keyword: "power bi", label: "Power BI" },
+    { keyword: "tableau", label: "Tableau" },
+    { keyword: "crm", label: "CRM" },
+    { keyword: "salesforce", label: "Salesforce" },
+    { keyword: "zendesk", label: "Zendesk" },
+    { keyword: "jira", label: "Jira" },
+    { keyword: "confluence", label: "Confluence" }
+  ];
+
+  skillDictionary.forEach(item => {
+    if (lower.includes(item.keyword) && !detectedSkills.includes(item.label)) {
+      detectedSkills.push(item.label);
+    }
+  });
+
+  // Détection contextuelle par regex (ex: chiffres clés, indicateurs, ROI, pourcentages)
+  if (/\d+%/i.test(text) || /croissance|hausse|augmentation|chiffre d'affaires|chiffre d affaires/i.test(text)) {
     if (!detectedSkills.includes("Orienté résultats")) detectedSkills.push("Orienté résultats");
-  }
-
-  if (lower.includes("déployer") || lower.includes("déploiement") || lower.includes("projet") || lower.includes("lancement") || lower.includes("refonte") || lower.includes("pilotage")) {
-    if (!detectedSkills.includes("Gestion de projet")) detectedSkills.push("Gestion de projet");
-  }
-
-  if (lower.includes("management") || lower.includes("équipe") || lower.includes("manager") || lower.includes("leadership") || lower.includes("encadrement")) {
-    if (!detectedSkills.includes("Management")) detectedSkills.push("Management");
-  }
-
-  if (lower.includes("expérience client") || lower.includes("cx") || lower.includes("satisfaction") || lower.includes("relation client") || lower.includes("voc")) {
-    if (!detectedSkills.includes("Expérience Client")) detectedSkills.push("Expérience Client");
-  }
-
-  if (lower.includes("data") || lower.includes("données") || lower.includes("analyse") || lower.includes("bi") || lower.includes("sql")) {
-    if (!detectedSkills.includes("Data & Analytics")) detectedSkills.push("Data & Analytics");
   }
 
   userProfile.cvText = cleanText;

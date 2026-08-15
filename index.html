@@ -28,7 +28,7 @@
 .empty{background:#fff;border:1px dashed var(--border);border-radius:14px;padding:40px 20px;text-align:center;color:var(--muted)}.profile-section-title{font-size:15px;font-weight:800;margin-bottom:12px}.field{margin-bottom:16px}.field label{display:block;font-weight:700;margin-bottom:6px;font-size:14px}
 .scan-status{font-size:13px;font-weight:700;color:var(--primary);margin-top:8px}
 /* Styles pastilles de compétences */
-.skills-container{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;margin-bottom:12px}
+.skills-container{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;margin-bottom:12px;min-height:36px;padding:8px;background:#f8fafc;border:1px solid var(--border);border-radius:9px}
 .skill-pill{background:#eff6ff;color:var(--primary);border:1px solid #bfdbfe;padding:6px 12px;border-radius:20px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px}
 .skill-pill button{background:none;border:none;color:var(--primary);cursor:pointer;font-weight:bold;font-size:14px;padding:0;line-height:1}
 .skill-pill button:hover{color:var(--red)}
@@ -183,7 +183,7 @@ document.getElementById("mainContent").innerHTML='<h1 class="page-title">Mes Off
 displayJobs(jobs.filter(j=>favorites.includes(j.id)));
 }
 
-// --- GESTION PROFIL & PASTILLES DE COMPÉTENCES AVEC BOUTON D'ANALYSE ---
+// --- GESTION PROFIL & PASTILLES DE COMPÉTENCES ---
 function showProfile(){
 currentView="profile";closeProfileMenu();document.querySelectorAll(".tab-button").forEach(b=>b.classList.remove("active"));document.getElementById("viewSwitcher").style.display="none";
 
@@ -204,7 +204,7 @@ document.getElementById("mainContent").innerHTML=`
 <div class="profile-card">
   <div class="profile-section-title">🏷️ Mes compétences (Savoir-faire)</div>
   <p style="font-size:13px; color:var(--muted); margin-top:0;">
-    Tu peux ajouter ou supprimer des pastilles ci-dessous, ou <span style="color:var(--primary); font-weight:bold; cursor:pointer; text-decoration:underline;" onclick="document.getElementById('cvFile').click()">cliquer ici pour charger vos compétences à l'aide de votre CV</span>.
+    Gère tes pastilles de compétences ci-dessous, ou <span style="color:var(--primary); font-weight:bold; cursor:pointer; text-decoration:underline;" onclick="document.getElementById('cvFile').click()">clique ici pour charger ton CV</span>.
   </p>
   
   <div id="skillsListContainer" class="skills-container"></div>
@@ -245,8 +245,8 @@ document.getElementById("backProfileBtn").addEventListener("click", renderSearch
 function renderSkillsPills() {
   const container = document.getElementById("skillsListContainer");
   if(!container) return;
-  if(userProfile.skills.length === 0) {
-    container.innerHTML = '<span style="color:var(--muted); font-size:13px;">Aucune compétence définie. Ajoute-en une ci-dessous ou analyse ton CV.</span>';
+  if(!userProfile.skills || userProfile.skills.length === 0) {
+    container.innerHTML = '<span style="color:var(--muted); font-size:13px; padding:4px;">Aucune compétence définie. Ajoute-en une ci-dessous ou analyse ton CV.</span>';
     return;
   }
   container.innerHTML = userProfile.skills.map((skill, index) => `
@@ -267,7 +267,7 @@ function addNewSkill() {
   }
 }
 
-function removeSkill(index) {
+window.removeSkill = function(index) {
   userProfile.skills.splice(index, 1);
   renderSkillsPills();
 }
@@ -317,7 +317,6 @@ function parseAndSmartExtract(text) {
   let detectedSkills = [...userProfile.skills];
   const lower = cleanText.toLowerCase();
 
-  // Analyse intelligente demandée : chiffres -> orienté résultat / déploiement, projet -> gestion de projet
   if (/\d+%|\d+\s*k€|\d+\s*ke|chiffre|croissance|hausse|optimisation|ROI|KPI|chiffre d'affaires/i.test(text)) {
     if (!detectedSkills.includes("Orienté résultats")) detectedSkills.push("Orienté résultats");
   }

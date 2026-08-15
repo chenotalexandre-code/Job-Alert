@@ -26,7 +26,7 @@
 .job{background:#fff;border:1px solid var(--border);border-radius:14px;padding:18px;box-shadow:var(--shadow)}.job-top{display:flex;justify-content:space-between;gap:15px}.job-title{font-size:18px;font-weight:750;margin:0 0 5px}.company{color:#475467;font-size:14px}.score{background:#ecfdf3;color:var(--green);font-size:13px;font-weight:700;border-radius:20px;padding:7px 10px;white-space:nowrap;height:fit-content}.meta{display:flex;flex-wrap:wrap;gap:7px;margin:14px 0}.tag{background:#f2f4f7;color:#475467;padding:5px 8px;border-radius:6px;font-size:12px}.salary{font-size:15px;font-weight:750;color:var(--green);margin-bottom:10px}.ai-advice{background:#ecfdf3;border-left:4px solid var(--green);padding:10px;border-radius:6px;font-size:13px;color:var(--green);margin-bottom:14px}.job-footer{border-top:1px solid var(--border);margin-top:14px;padding-top:12px;display:flex;justify-content:space-between;align-items:center;gap:10px}.date{color:var(--muted);font-size:12px}.job-actions{display:flex;gap:8px;flex-wrap:wrap}.small-button{border:1px solid var(--border);background:#fff;border-radius:8px;padding:8px 12px;cursor:pointer;font-size:12px}.small-button:hover{background:#f8fafc}.small-button.favorite{color:#b45309;border-color:#f59e0b}.status-select{min-height:38px;border:1px solid var(--border);border-radius:8px;padding:0 8px;background:#fff;font-size:12px}
 .application-row{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:14px 0;border-bottom:1px solid var(--border)}.application-row:last-child{border-bottom:0}.application-title{font-weight:700;margin-bottom:4px}.application-company{color:var(--muted);font-size:13px}.application-status{background:#eff6ff;color:var(--primary);border-radius:20px;padding:6px 10px;font-size:12px;font-weight:700}
 .empty{background:#fff;border:1px dashed var(--border);border-radius:14px;padding:40px 20px;text-align:center;color:var(--muted)}.profile-section-title{font-size:15px;font-weight:800;margin-bottom:12px}.field{margin-bottom:16px}.field label{display:block;font-weight:700;margin-bottom:6px;font-size:14px}
-.scan-status{font-size:13px;font-weight:700;color:var(--primary);margin-top:6px}
+.scan-status{font-size:13px;font-weight:700;color:var(--primary);margin-top:8px}
 /* Styles pastilles de compétences */
 .skills-container{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;margin-bottom:12px}
 .skill-pill{background:#eff6ff;color:var(--primary);border:1px solid #bfdbfe;padding:6px 12px;border-radius:20px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px}
@@ -183,26 +183,29 @@ document.getElementById("mainContent").innerHTML='<h1 class="page-title">Mes Off
 displayJobs(jobs.filter(j=>favorites.includes(j.id)));
 }
 
-// --- GESTION PROFIL & PASTILLES DE COMPÉTENCES ---
+// --- GESTION PROFIL & PASTILLES DE COMPÉTENCES AVEC BOUTON D'ANALYSE ---
 function showProfile(){
 currentView="profile";closeProfileMenu();document.querySelectorAll(".tab-button").forEach(b=>b.classList.remove("active"));document.getElementById("viewSwitcher").style.display="none";
 
 document.getElementById("mainContent").innerHTML=`
 <h1 class="page-title">Mon Profil & Savoir-faire</h1>
-<p class="page-description">Importe ton CV PDF pour que l'agent IA détecte intelligemment tes compétences sous forme de pastilles modifiables.</p>
+<p class="page-description">Importe ton CV PDF et clique sur "Analyser mes compétences" pour remplir automatiquement tes pastilles.</p>
 
 <div class="profile-card">
   <div class="profile-section-title">🤖 Assistant Scan de CV (PDF)</div>
   <div class="field">
     <label>📄 Déposer votre fichier CV (.pdf)</label>
     <input type="file" id="cvFile" accept=".pdf" class="input" style="padding:6px; cursor:pointer;">
+    <button class="search-button" id="analyzeCvBtn" type="button" style="margin-top:12px; width:100%;">🔍 Analyser mes compétences</button>
     <div id="cvScanStatus" class="scan-status"></div>
   </div>
 </div>
 
 <div class="profile-card">
-  <div class="profile-section-title">🏷️ Compétences & Savoir-faire (Pastilles de recherche)</div>
-  <p style="font-size:13px; color:var(--muted); margin-top:0;">Ce sont ces critères qui alimentent la recherche intelligente des offres.</p>
+  <div class="profile-section-title">🏷️ Mes compétences (Savoir-faire)</div>
+  <p style="font-size:13px; color:var(--muted); margin-top:0;">
+    Tu peux ajouter ou supprimer des pastilles ci-dessous, ou <span style="color:var(--primary); font-weight:bold; cursor:pointer; text-decoration:underline;" onclick="document.getElementById('cvFile').click()">cliquer ici pour charger vos compétences à l'aide de votre CV</span>.
+  </p>
   
   <div id="skillsListContainer" class="skills-container"></div>
 
@@ -232,7 +235,7 @@ document.getElementById("mainContent").innerHTML=`
 
 renderSkillsPills();
 
-document.getElementById("cvFile").addEventListener("change", handlePdfUpload);
+document.getElementById("analyzeCvBtn").addEventListener("click", handlePdfAnalysis);
 document.getElementById("addSkillBtn").addEventListener("click", addNewSkill);
 document.getElementById("newSkillInput").addEventListener("keypress", (e) => { if(e.key === 'Enter') { e.preventDefault(); addNewSkill(); } });
 document.getElementById("saveProfileBtn").addEventListener("click", saveProfileData);
@@ -243,7 +246,7 @@ function renderSkillsPills() {
   const container = document.getElementById("skillsListContainer");
   if(!container) return;
   if(userProfile.skills.length === 0) {
-    container.innerHTML = '<span style="color:var(--muted); font-size:13px;">Aucune compétence définie. Ajoute-en une ci-dessous.</span>';
+    container.innerHTML = '<span style="color:var(--muted); font-size:13px;">Aucune compétence définie. Ajoute-en une ci-dessous ou analyse ton CV.</span>';
     return;
   }
   container.innerHTML = userProfile.skills.map((skill, index) => `
@@ -269,12 +272,17 @@ function removeSkill(index) {
   renderSkillsPills();
 }
 
-async function handlePdfUpload(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-
+async function handlePdfAnalysis() {
+  const fileInput = document.getElementById("cvFile");
+  const file = fileInput.files[0];
   const statusEl = document.getElementById("cvScanStatus");
-  statusEl.textContent = "🔄 Analyse intelligente du PDF en cours...";
+
+  if (!file) {
+    statusEl.textContent = "⚠️ Veuillez d'abord sélectionner un fichier PDF.";
+    return;
+  }
+
+  statusEl.textContent = "🔄 Analyse intelligente de votre CV en cours...";
 
   try {
     const arrayBuffer = await file.arrayBuffer();
@@ -295,7 +303,7 @@ async function handlePdfUpload(event) {
     }
 
     parseAndSmartExtract(fullText);
-    statusEl.textContent = "✅ Scan réussi ! Compétences et savoir-faire identifiés.";
+    statusEl.textContent = "✅ Analyse réussie ! Vos compétences ont été remplies automatiquement ci-dessous.";
   } catch (error) {
     console.error("Erreur lecture PDF:", error);
     statusEl.textContent = "❌ Erreur lors de la lecture du fichier PDF.";
@@ -309,28 +317,23 @@ function parseAndSmartExtract(text) {
   let detectedSkills = [...userProfile.skills];
   const lower = cleanText.toLowerCase();
 
-  // Analyse intelligente par l'agent IA
-  // 1. Détection de chiffres / métriques -> "Orienté résultats"
+  // Analyse intelligente demandée : chiffres -> orienté résultat / déploiement, projet -> gestion de projet
   if (/\d+%|\d+\s*k€|\d+\s*ke|chiffre|croissance|hausse|optimisation|ROI|KPI|chiffre d'affaires/i.test(text)) {
     if (!detectedSkills.includes("Orienté résultats")) detectedSkills.push("Orienté résultats");
   }
 
-  // 2. Détection de projets / lancements -> "Gestion de projet"
   if (lower.includes("déployer") || lower.includes("déploiement") || lower.includes("projet") || lower.includes("lancement") || lower.includes("refonte") || lower.includes("pilotage")) {
     if (!detectedSkills.includes("Gestion de projet")) detectedSkills.push("Gestion de projet");
   }
 
-  // 3. Management / Équipe
   if (lower.includes("management") || lower.includes("équipe") || lower.includes("manager") || lower.includes("leadership") || lower.includes("encadrement")) {
     if (!detectedSkills.includes("Management")) detectedSkills.push("Management");
   }
 
-  // 4. Relation client / CX
   if (lower.includes("expérience client") || lower.includes("cx") || lower.includes("satisfaction") || lower.includes("relation client") || lower.includes("voc")) {
     if (!detectedSkills.includes("Expérience Client")) detectedSkills.push("Expérience Client");
   }
 
-  // 5. Data & Analytics
   if (lower.includes("data") || lower.includes("données") || lower.includes("analyse") || lower.includes("bi") || lower.includes("sql")) {
     if (!detectedSkills.includes("Data & Analytics")) detectedSkills.push("Data & Analytics");
   }

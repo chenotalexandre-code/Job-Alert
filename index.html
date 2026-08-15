@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Job Alert 2</title>
+<!-- Inclusion de PDF.js pour la lecture et le scan des fichiers PDF côté client -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+</script>
 <style>
 :root{--bg:#f5f7fb;--card:#fff;--text:#182230;--muted:#667085;--border:#e4e7ec;--primary:#2563eb;--primary-dark:#1d4ed8;--green:#15803d;--red:#dc2626;--shadow:0 4px 18px rgba(16,24,40,.07)}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}button,input,textarea,select{font:inherit}button{-webkit-tap-highlight-color:transparent}
@@ -21,6 +26,7 @@
 .job{background:#fff;border:1px solid var(--border);border-radius:14px;padding:18px;box-shadow:var(--shadow)}.job-top{display:flex;justify-content:space-between;gap:15px}.job-title{font-size:18px;font-weight:750;margin:0 0 5px}.company{color:#475467;font-size:14px}.score{background:#ecfdf3;color:var(--green);font-size:13px;font-weight:700;border-radius:20px;padding:7px 10px;white-space:nowrap;height:fit-content}.meta{display:flex;flex-wrap:wrap;gap:7px;margin:14px 0}.tag{background:#f2f4f7;color:#475467;padding:5px 8px;border-radius:6px;font-size:12px}.salary{font-size:15px;font-weight:750;color:var(--green);margin-bottom:10px}.ai-advice{background:#ecfdf3;border-left:4px solid var(--green);padding:10px;border-radius:6px;font-size:13px;color:var(--green);margin-bottom:14px}.job-footer{border-top:1px solid var(--border);margin-top:14px;padding-top:12px;display:flex;justify-content:space-between;align-items:center;gap:10px}.date{color:var(--muted);font-size:12px}.job-actions{display:flex;gap:8px;flex-wrap:wrap}.small-button{border:1px solid var(--border);background:#fff;border-radius:8px;padding:8px 12px;cursor:pointer;font-size:12px}.small-button:hover{background:#f8fafc}.small-button.favorite{color:#b45309;border-color:#f59e0b}.status-select{min-height:38px;border:1px solid var(--border);border-radius:8px;padding:0 8px;background:#fff;font-size:12px}
 .application-row{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:14px 0;border-bottom:1px solid var(--border)}.application-row:last-child{border-bottom:0}.application-title{font-weight:700;margin-bottom:4px}.application-company{color:var(--muted);font-size:13px}.application-status{background:#eff6ff;color:var(--primary);border-radius:20px;padding:6px 10px;font-size:12px;font-weight:700}
 .empty{background:#fff;border:1px dashed var(--border);border-radius:14px;padding:40px 20px;text-align:center;color:var(--muted)}.profile-section-title{font-size:15px;font-weight:800;margin-bottom:12px}.field{margin-bottom:16px}.field label{display:block;font-weight:700;margin-bottom:6px;font-size:14px}
+.scan-status{font-size:13px;font-weight:700;color:var(--primary);margin-top:6px}
 @media(max-width:800px){.search-grid{grid-template-columns:1fr}.advanced-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:500px){.header{padding:12px 14px}.logo{font-size:17px}.container{padding:18px 10px 40px}.view-switcher{margin-bottom:18px}.tab-button{padding:9px 16px;font-size:13px}.advanced-grid{grid-template-columns:1fr}.stats{gap:6px}.stat{padding:10px}.stat-number{font-size:19px}.job{padding:14px}.job-top{display:block}.score{display:inline-block;margin-top:10px}.job-footer{align-items:flex-start;flex-direction:column}.job-actions{width:100%}.small-button,.status-select{flex:1}.profile-dropdown{width:220px}.application-row{align-items:flex-start;flex-direction:column}}
 </style>
@@ -140,12 +146,126 @@ currentView="favorites";setActiveTab("navFavorites");document.getElementById("vi
 document.getElementById("mainContent").innerHTML='<h1 class="page-title">Mes Offres Favorites</h1><p class="page-description">Retrouve ici les opportunités que tu souhaites conserver.</p><section id="jobs" class="jobs"></section>';
 displayJobs(jobs.filter(j=>favorites.includes(j.id)));
 }
+
+// --- PARTIE PROFIL & SCAN DE CV .PDF ---
 function showProfile(){
 currentView="profile";closeProfileMenu();document.querySelectorAll(".tab-button").forEach(b=>b.classList.remove("active"));document.getElementById("viewSwitcher").style.display="none";
-document.getElementById("mainContent").innerHTML=`<h1 class="page-title">Mon Profil & CV</h1><p class="page-description">Décris ton expérience et tes objectifs pour améliorer le matching des offres.</p><div class="profile-card"><div class="profile-section-title">👤 Mon profil professionnel</div><div class="field"><label>📄 CV / Expérience / Compétences</label><textarea id="cvInput" class="textarea" placeholder="Colle ici ton CV ou décris ton expérience...">${escapeHTML(userProfile.cvText)}</textarea></div><div class="field"><label>🎯 Types de postes recherchés</label><textarea id="targetJobsInput" class="textarea">${escapeHTML(userProfile.targetJobs)}</textarea></div><div class="field"><label>❌ Mots-clés / postes à exclure</label><input id="exclusionInput" class="input" value="${escapeHTML(userProfile.exclusions)}" placeholder="Ex : commercial, développeur, freelance"></div><div class="field"><label>💰 Salaire minimum souhaité</label><input id="salaryInput" class="input" type="number" value="${userProfile.minSalary}"></div><button class="search-button" id="saveProfileBtn" style="width:100%;">Enregistrer mon profil</button></div><button class="small-button" id="backProfileBtn">← Retour à la recherche</button>`;
-document.getElementById("saveProfileBtn").addEventListener("click",saveProfileData);document.getElementById("backProfileBtn").addEventListener("click",renderSearchPage);
+document.getElementById("mainContent").innerHTML=`
+<h1 class="page-title">Mon Profil & CV</h1>
+<p class="page-description">Importe ton CV au format PDF pour que l'agent IA analyse tes compétences, ton expertise et compose ton profil automatiquement.</p>
+
+<div class="profile-card">
+  <div class="profile-section-title">🤖 Assistant Scan de CV (PDF)</div>
+  <div class="field">
+    <label>📄 Déposer / Importer votre fichier CV (.pdf)</label>
+    <input type="file" id="cvFile" accept=".pdf" class="input" style="padding:6px; cursor:pointer;">
+    <div id="cvScanStatus" class="scan-status"></div>
+  </div>
+</div>
+
+<div class="profile-card">
+  <div class="profile-section-title">👤 Synthèse de votre profil professionnel</div>
+  <div class="field">
+    <label>📄 Texte brut extrait / Compétences clés</label>
+    <textarea id="cvInput" class="textarea" placeholder="Le texte du CV s'affichera ici après importation...">${escapeHTML(userProfile.cvText)}</textarea>
+  </div>
+  <div class="field">
+    <label>🎯 Types de postes / Marchés recherchés (détectés ou modifiables)</label>
+    <textarea id="targetJobsInput" class="textarea">${escapeHTML(userProfile.targetJobs)}</textarea>
+  </div>
+  <div class="field">
+    <label>❌ Mots-clés / postes à exclure</label>
+    <input id="exclusionInput" class="input" value="${escapeHTML(userProfile.exclusions)}" placeholder="Ex : commercial, développeur, freelance">
+  </div>
+  <div class="field">
+    <label>💰 Salaire minimum souhaité (€)</label>
+    <input id="salaryInput" class="input" type="number" value="${userProfile.minSalary}">
+  </div>
+  <button class="search-button" id="saveProfileBtn" style="width:100%;">Enregistrer mon profil</button>
+</div>
+<button class="small-button" id="backProfileBtn">← Retour à la recherche</button>`;
+
+document.getElementById("cvFile").addEventListener("change", handlePdfUpload);
+document.getElementById("saveProfileBtn").addEventListener("click",saveProfileData);
+document.getElementById("backProfileBtn").addEventListener("click",renderSearchPage);
 }
-function saveProfileData(){userProfile.cvText=document.getElementById("cvInput").value;userProfile.targetJobs=document.getElementById("targetJobsInput").value;userProfile.exclusions=document.getElementById("exclusionInput").value;userProfile.minSalary=Number(document.getElementById("salaryInput").value)||0;saveData();alert("Profil enregistré !");renderSearchPage()}
+
+async function handlePdfUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const statusEl = document.getElementById("cvScanStatus");
+  statusEl.textContent = "🔄 Analyse du fichier PDF en cours par l'Agent IA...";
+
+  try {
+    const arrayBuffer = await file.arrayBuffer();
+    const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+    const pdfDoc = await loadingTask.promise;
+    let fullText = "";
+
+    for (let i = 1; i <= pdfDoc.numPages; i++) {
+      const page = await pdfDoc.getPage(i);
+      const textContent = await page.getTextContent();
+      const pageText = textContent.items.map(item => item.str).join(" ");
+      fullText += pageText + "\n";
+    }
+
+    if (!fullText.trim()) {
+      statusEl.textContent = "⚠️ Le fichier PDF semble vide ou illisible.";
+      return;
+    }
+
+    // Analyse intelligente du texte extrait pour composer les compétences et domaines
+    parseAndAutoFillProfile(fullText);
+    statusEl.textContent = "✅ Scan réussi ! Compétences, expertise et postes cibles mis à jour.";
+  } catch (error) {
+    console.error("Erreur lecture PDF:", error);
+    statusEl.textContent = "❌ Erreur lors de la lecture du fichier PDF.";
+  }
+}
+
+function parseAndAutoFillProfile(text) {
+  const cleanText = text.trim();
+  document.getElementById("cvInput").value = cleanText.substring(0, 2000) + (cleanText.length > 2000 ? "\n[...]" : "");
+
+  // Détection automatique des mots-clés de domaines et métiers
+  let inferredRoles = [];
+  const lower = cleanText.toLowerCase();
+
+  if (lower.includes("expérience client") || lower.includes("cx") || lower.includes("satisfaction") || lower.includes("relation client")) {
+    inferredRoles.push("Responsable Expérience Client");
+  }
+  if (lower.includes("produit") || lower.includes("product owner") || lower.includes("product manager")) {
+    inferredRoles.push("Product Owner");
+  }
+  if (lower.includes("projet") || lower.includes("chef de projet") || lower.includes("project manager")) {
+    inferredRoles.push("Chef de Projet");
+  }
+  if (lower.includes("data") || lower.includes("données") || lower.includes("analyst")) {
+    inferredRoles.push("Expert Data / Analytics");
+  }
+
+  if (inferredRoles.length === 0) {
+    inferredRoles.push("Responsable / Cadre Expert Métier");
+  }
+
+  document.getElementById("targetJobsInput").value = inferredRoles.join(", ");
+
+  // Mise à jour de l'objet profil en mémoire
+  userProfile.cvText = cleanText;
+  userProfile.targetJobs = inferredRoles.join(", ");
+}
+
+function saveProfileData(){
+  userProfile.cvText=document.getElementById("cvInput").value;
+  userProfile.targetJobs=document.getElementById("targetJobsInput").value;
+  userProfile.exclusions=document.getElementById("exclusionInput").value;
+  userProfile.minSalary=Number(document.getElementById("salaryInput").value)||0;
+  saveData();
+  alert("Profil enregistré !");
+  renderSearchPage();
+}
+
 function showAlerts(){
 currentView="alerts";closeProfileMenu();document.querySelectorAll(".tab-button").forEach(b=>b.classList.remove("active"));document.getElementById("viewSwitcher").style.display="none";
 document.getElementById("mainContent").innerHTML=`<h1 class="page-title">Paramétrage des Alertes</h1><p class="page-description">Configure les recherches que Job Alert devra surveiller.</p><div class="alert-card"><div class="field"><label>🔍 Recherche</label><input id="alertSearch" class="input" value="${escapeHTML(alertConfig.searchQuery)}" placeholder="Ex : Responsable Expérience Client"></div><div class="field"><label>📍 Localisation</label><input id="alertLocation" class="input" value="${escapeHTML(alertConfig.locationQuery)}" placeholder="Ex : Paris, Île-de-France"></div><div class="field"><label>🤖 Instructions pour l'agent IA</label><textarea id="alertPrompt" class="textarea">${escapeHTML(alertConfig.aiPrompt)}</textarea></div><div class="field"><label>⏱️ Fréquence</label><select id="alertFrequency" class="select"><option ${alertConfig.frequency==="Quotidienne"?"selected":""}>Quotidienne</option><option ${alertConfig.frequency==="Hebdomadaire"?"selected":""}>Hebdomadaire</option></select></div><div class="field"><label>🕐 Heure</label><input id="alertTime" class="input" type="time" value="${alertConfig.time}"></div><button class="search-button" id="saveAlertBtn" style="width:100%;">Enregistrer l'alerte</button></div><button class="small-button" id="backAlertBtn">← Retour à la recherche</button>`;

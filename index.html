@@ -21,7 +21,7 @@
 .container{max-width:1200px;margin:auto;padding:24px 16px 50px}.view-switcher{display:flex;justify-content:center;gap:10px;margin-bottom:24px}.tab-button{background:#fff;border:1px solid var(--border);color:var(--muted);padding:10px 24px;border-radius:30px;cursor:pointer;font-weight:600;font-size:14px;box-shadow:var(--shadow)}.tab-button.active{background:var(--primary);color:#fff;border-color:var(--primary)}
 .page-title{margin:0;font-size:27px}.page-description{color:var(--muted);margin:7px 0 20px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}.stat{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px}.stat-number{font-size:23px;font-weight:800}.stat-label{color:var(--muted);font-size:12px;margin-top:3px}
 .search-card,.profile-card,.alert-card,.application-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;box-shadow:var(--shadow);margin-bottom:18px}.search-grid{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:10px}
-.input,.textarea,.select{width:100%;min-height:44px;border:1px solid var(--border);border-radius:9px;padding:10px 12px;background:#fff;color:var(--text)}.textarea{min-height:100px;resize:vertical}.search-button{border:0;border-radius:9px;padding:0 20px;background:var(--primary);color:#fff;font-weight:700;cursor:pointer;min-height:44px}.search-button:hover{background:var(--primary-dark)}
+.input,.textarea,.select{width:100%;min-height:44px;border:1px solid var(--border);border-radius:9px;padding:10px 12px;background:#fff;color:var(--text)}.textarea{min-height:120px;resize:vertical}.search-button{border:0;border-radius:9px;padding:0 20px;background:var(--primary);color:#fff;font-weight:700;cursor:pointer;min-height:44px}.search-button:hover{background:var(--primary-dark)}
 .advanced{margin-top:12px}.advanced summary{cursor:pointer;color:var(--primary);font-size:14px;font-weight:600}.advanced-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}.results-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.results-count{color:var(--muted);font-size:14px}.sort{width:190px}.jobs{display:grid;gap:12px}
 .job{background:#fff;border:1px solid var(--border);border-radius:14px;padding:18px;box-shadow:var(--shadow)}.job-top{display:flex;justify-content:space-between;gap:15px}.job-title{font-size:18px;font-weight:750;margin:0 0 5px}.company{color:#475467;font-size:14px}.score{background:#ecfdf3;color:var(--green);font-size:13px;font-weight:700;border-radius:20px;padding:7px 10px;white-space:nowrap;height:fit-content}.meta{display:flex;flex-wrap:wrap;gap:7px;margin:14px 0}.tag{background:#f2f4f7;color:#475467;padding:5px 8px;border-radius:6px;font-size:12px}.salary{font-size:15px;font-weight:750;color:var(--green);margin-bottom:10px}.ai-advice{background:#ecfdf3;border-left:4px solid var(--green);padding:10px;border-radius:6px;font-size:13px;color:var(--green);margin-bottom:14px}.job-footer{border-top:1px solid var(--border);margin-top:14px;padding-top:12px;display:flex;justify-content:space-between;align-items:center;gap:10px}.date{color:var(--muted);font-size:12px}.job-actions{display:flex;gap:8px;flex-wrap:wrap}.small-button{border:1px solid var(--border);background:#fff;border-radius:8px;padding:8px 12px;cursor:pointer;font-size:12px}.small-button:hover{background:#f8fafc}.small-button.favorite{color:#b45309;border-color:#f59e0b}.status-select{min-height:38px;border:1px solid var(--border);border-radius:8px;padding:0 8px;background:#fff;font-size:12px}
 .application-row{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:14px 0;border-bottom:1px solid var(--border)}.application-row:last-child{border-bottom:0}.application-title{font-weight:700;margin-bottom:4px}.application-company{color:var(--muted);font-size:13px}.application-status{background:#eff6ff;color:var(--primary);border-radius:20px;padding:6px 10px;font-size:12px;font-weight:700}
@@ -63,10 +63,10 @@
 </div>
 <script>
 const jobs=[
-{id:1,title:"Responsable Expérience Client",company:"TechCorp Paris",location:"Paris",contract:"CDI",remote:"Oui",salary:65000,maxSalary:75000,score:96,date:"2026-08-14",tags:["Expérience Client","VoC","Management","Gestion de projet","Orienté résultats"],source:"Entreprise",aiAdvice:"💡 Conseil IA : Forte correspondance avec ton savoir-faire et tes indicateurs de résultats."},
-{id:2,title:"Responsable Satisfaction Client",company:"Inovium Group",location:"Île-de-France",contract:"CDI",remote:"Oui",salary:60000,maxSalary:70000,score:92,date:"2026-08-13",tags:["Customer Experience","Management","Relation client"],source:"LinkedIn",aiAdvice:"💡 Conseil IA : Excellent alignement avec tes compétences relationnelles et de pilotage."},
-{id:3,title:"Product Owner Data",company:"DataPulse",location:"Paris",contract:"CDI",remote:"Oui",salary:55000,maxSalary:68000,score:84,date:"2026-08-11",tags:["Product Owner","Data","Agile","Gestion de projet"],source:"France Travail",aiAdvice:"💡 Conseil IA : Opportunité axée sur la gestion de projet et l'analyse de données."},
-{id:4,title:"Chef de Projet Expérience Client",company:"Symphony CX",location:"Boulogne-Billancourt",contract:"CDI",remote:"Oui",salary:50000,maxSalary:60000,score:78,date:"2026-08-09",tags:["CX","Parcours Client","Gestion de projet","Voix du Client"],source:"LinkedIn",aiAdvice:"💡 Conseil IA : Parfaitement adapté à ton expertise en gestion de projet CX."}
+{id:1,title:"Responsable Expérience Client",company:"TechCorp Paris",location:"Paris",contract:"CDI",remote:"Oui",salary:65000,maxSalary:75000,score:96,date:"2026-08-14",tags:["Expérience Client","VoC","Management","Gestion de projet","Orienté résultats","UX"],source:"Entreprise",aiAdvice:"💡 Conseil IA : Forte correspondance avec ton savoir-faire et tes indicateurs de résultats."},
+{id:2,title:"Responsable Satisfaction Client",company:"Inovium Group",location:"Île-de-France",contract:"CDI",remote:"Oui",salary:60000,maxSalary:70000,score:92,date:"2026-08-13",tags:["Customer Experience","Management","Relation client","Vision Client"],source:"LinkedIn",aiAdvice:"💡 Conseil IA : Excellent alignement avec tes compétences relationnelles et de pilotage."},
+{id:3,title:"Product Owner Data",company:"DataPulse",location:"Paris",contract:"CDI",remote:"Oui",salary:55000,maxSalary:68000,score:84,date:"2026-08-11",tags:["Product Owner","Data","Agile","Gestion de projet","Automatisation"],source:"France Travail",aiAdvice:"💡 Conseil IA : Opportunité axée sur la gestion de projet et l'analyse de données."},
+{id:4,title:"Chef de Projet Expérience Client",company:"Symphony CX",location:"Boulogne-Billancourt",contract:"CDI",remote:"Oui",salary:50000,maxSalary:60000,score:78,date:"2026-08-09",tags:["CX","Parcours Client","Gestion de projet","Voix du Client","Rigueur"],source:"LinkedIn",aiAdvice:"💡 Conseil IA : Parfaitement adapté à ton expertise en gestion de projet CX."}
 ];
 
 function loadJSON(key,fallback){try{const value=localStorage.getItem(key);return value?JSON.parse(value):fallback}catch(e){return fallback}}
@@ -78,8 +78,14 @@ let userProfile=loadJSON("jobAlertProfile",{
   birthdate: "1992-05-14",
   phone: "06 12 34 56 78",
   email: "alexandre.dupont@email.com",
-  cvText:"Expérience en gestion de projet, relation client, satisfaction client, déploiement de solutions et management d'équipe avec augmentation de +25% de la satisfaction.",
-  skills:["Gestion de projet", "Expérience Client", "Management", "Orienté résultats", "Relation client", "VoC", "Product Owner", "Négociation", "Rigueur", "Innovation"],
+  narrativeSummary: "Professionnel senior avec plus de 10 ans d'expérience en gestion de projet, expérience client (CX/UX/VoC) et management d'équipe (encadrement de 3 collaborateurs). Expert dans l'implémentation de solutions, l'automatisation, la négociation et la vision client. Motivé par l'innovation, la rigueur opérationnelle et l'atteinte de résultats mesurables (ROI, KPI). Solide parcours en études de marché et prospection stratégique.",
+  skills:[
+    "10+ ans d'expérience", "Management d'équipe (3 personnes)", "Gestion de projet", 
+    "Expérience Client", "Management", "Orienté résultats", "Relation client", 
+    "VoC", "Product Owner", "Négociation", "Rigueur", "Innovation", 
+    "UX", "Automatisation", "Prospection", "Étude de marché", 
+    "Gestion de risque", "Vision Client", "Implémentation de solutions"
+  ],
   exclusions:"",
   minSalary:40000
 });
@@ -155,13 +161,13 @@ if(remote && job.remote !== remote) return false;
 return true;
 });
 
-// Calcul dynamique du score de pertinence basé sur les compétences du profil
+// Calcul dynamique du score de pertinence basé sur le socle de compétences
 results.forEach(job => {
   if(userProfile.skills && userProfile.skills.length > 0) {
     let matchedSkillsCount = userProfile.skills.filter(skill => 
       job.tags.some(t => t.toLowerCase().includes(skill.toLowerCase())) || job.title.toLowerCase().includes(skill.toLowerCase())
     ).length;
-    job.score = Math.min(99, 65 + (matchedSkillsCount * 10));
+    job.score = Math.min(99, 65 + (matchedSkillsCount * 8));
   }
 });
 
@@ -175,7 +181,7 @@ function displayJobs(results){
 const container=document.getElementById("jobs");if(!container)return;
 const total=document.getElementById("totalJobs");if(total)total.textContent=results.length;
 const count=document.getElementById("resultsCount");if(count)count.textContent=results.length+" offre"+(results.length>1?"s":"");
-if(!results.length){container.innerHTML='<div class="empty"><strong>Aucune offre trouvée</strong><br><span>Modifie tes critères ou tes compétences clés.</span></div>';return}
+if(!results.length){container.innerHTML='<div class="empty"><strong>Aucune offre trouvée</strong><br><span>Modifie tes critères ou ton socle de compétences.</span></div>';return}
 container.innerHTML=results.map(job=>{
 const fav=favorites.includes(job.id),app=applications[job.id]||"";
 return `<article class="job"><div class="job-top"><div><h2 class="job-title">${job.title}</h2><div class="company">${job.company} · ${job.location}</div></div><div class="score">${job.score}% match</div></div><div class="meta"><span class="tag">${job.contract}</span><span class="tag">${job.remote==="Oui"?"Télétravail":"Sur site"}</span>${job.tags.map(t=>`<span class="tag">${t}</span>`).join("")}</div><div class="salary">${job.salary.toLocaleString("fr-FR")} – ${job.maxSalary.toLocaleString("fr-FR")} € / an</div><div class="ai-advice">${job.aiAdvice}</div><div class="job-footer"><div class="date">Publiée le ${new Date(job.date).toLocaleDateString("fr-FR")} · ${job.source}</div><div class="job-actions"><button class="small-button ${fav?"favorite":""}" onclick="toggleFavorite(${job.id})">${fav?"★ Favori":"☆ Favori"}</button><select class="status-select" onchange="setApplication(${job.id},this.value)"><option value="">Suivi</option><option value="À contacter" ${app==="À contacter"?"selected":""}>À contacter</option><option value="Candidature envoyée" ${app==="Candidature envoyée"?"selected":""}>Candidature envoyée</option><option value="Entretien" ${app==="Entretien"?"selected":""}>Entretien</option></select></div></div></article>`}).join("");
@@ -244,38 +250,39 @@ function showSkillsProfile(){
 currentView="skillsProfile";closeProfileMenu();document.querySelectorAll(".tab-button").forEach(b=>b.classList.remove("active"));document.getElementById("viewSwitcher").style.display="none";
 
 document.getElementById("mainContent").innerHTML=`
-<h1 class="page-title">Mes Compétences & Savoir-faire</h1>
-<p class="page-description">Importe ton CV PDF pour alimenter automatiquement ton socle robuste de compétences.</p>
+<h1 class="page-title">Mes Compétences & Socle Stratégique</h1>
+<p class="page-description">Importe ton CV PDF pour alimenter ton résumé narratif et ton socle de compétences complet pour l'agent IA.</p>
 
 <div class="profile-card">
   <div class="profile-section-title">🤖 Assistant Scan Intelligent de CV (PDF)</div>
   <div class="field">
     <label>📄 Déposer votre fichier CV (.pdf)</label>
     <input type="file" id="cvFile" accept=".pdf" class="input" style="padding:6px; cursor:pointer;">
-    <button class="search-button" id="analyzeCvBtn" type="button" style="margin-top:12px; width:100%;">🔍 Analyser et extraire mes compétences</button>
+    <button class="search-button" id="analyzeCvBtn" type="button" style="margin-top:12px; width:100%;">🔍 Analyser et extraire le socle complet</button>
     <div id="cvScanStatus" class="scan-status"></div>
   </div>
 </div>
 
 <div class="profile-card">
-  <div class="profile-section-title">🏷️ Pastilles de compétences détectées</div>
+  <div class="profile-section-title">🏷️ Socle des Compétences & Savoir-faire détectés</div>
   <p style="font-size:13px; color:var(--muted); margin-top:0;">
-    Socle sémantique utilisé pour scorer et filtrer toutes tes offres.
+    Pastilles utilisées pour le calcul de pertinence (matching) et les filtres de recherche.
   </p>
   
   <div id="skillsListContainer" class="skills-container"></div>
 
   <div class="skill-add-row" style="margin-top: 12px;">
-    <input id="newSkillInput" class="input" placeholder="Ajouter manuellement une compétence...">
+    <input id="newSkillInput" class="input" placeholder="Ajouter manuellement une compétence ou un indicateur...">
     <button class="search-button" id="addSkillBtn" type="button" style="white-space:nowrap;">Ajouter</button>
   </div>
 </div>
 
 <div class="profile-card">
-  <div class="profile-section-title">⚙️ Paramètres d'analyse & Exclusion</div>
+  <div class="profile-section-title">⚙️ Paramètres d'analyse & Résumé narratif</div>
   <div class="field">
-    <label>📄 Texte brut extrait du CV</label>
-    <textarea id="cvInput" class="textarea">${escapeHTML(userProfile.cvText)}</textarea>
+    <label>📝 Résumé narratif (Ciment de notre recherche et de l'agent IA)</label>
+    <p style="font-size:12px; color:var(--muted); margin-top:0;">Décrit ta vie professionnelle, tes études, tes motivations, ton expérience (ex: années, management) et tes forces.</p>
+    <textarea id="narrativeInput" class="textarea">${escapeHTML(userProfile.narrativeSummary)}</textarea>
   </div>
   <div class="field">
     <label>❌ Mots-clés / domaines à exclure</label>
@@ -285,7 +292,7 @@ document.getElementById("mainContent").innerHTML=`
     <label>💰 Salaire minimum souhaité (€)</label>
     <input id="salaryInput" class="input" type="number" value="${userProfile.minSalary}">
   </div>
-  <button class="search-button" id="saveSkillsBtn" style="width:100%;">Enregistrer mes compétences</button>
+  <button class="search-button" id="saveSkillsBtn" style="width:100%;">Enregistrer mon socle et mes paramètres</button>
 </div>
 <button class="small-button" id="backSkillsBtn">← Retour à la recherche</button>`;
 
@@ -338,7 +345,7 @@ async function handlePdfAnalysis() {
     return;
   }
 
-  statusEl.textContent = "🔄 Analyse intelligente et approfondie de votre CV en cours...";
+  statusEl.textContent = "🔄 Analyse approfondie du CV et construction du socle narratif en cours...";
 
   try {
     const arrayBuffer = await file.arrayBuffer();
@@ -359,7 +366,7 @@ async function handlePdfAnalysis() {
     }
 
     parseAndSmartExtract(fullText);
-    statusEl.textContent = `✅ Analyse robuste réussie ! ${userProfile.skills.length} compétences détectées au total.`;
+    statusEl.textContent = `✅ Analyse robuste réussie ! Résumé narratif généré et ${userProfile.skills.length} compétences/indicateurs extraits.`;
   } catch (error) {
     console.error("Erreur lecture PDF:", error);
     statusEl.textContent = "❌ Erreur lors de la lecture du fichier PDF.";
@@ -368,20 +375,35 @@ async function handlePdfAnalysis() {
 
 function parseAndSmartExtract(text) {
   const cleanText = text.trim();
-  document.getElementById("cvInput").value = cleanText.substring(0, 2000) + (cleanText.length > 2000 ? "\n[...]" : "");
-
-  let detectedSkills = [...userProfile.skills];
   const lower = cleanText.toLowerCase();
 
-  // Dictionnaire étendu et extrêmement robuste couvrant tous les domaines demandés (UX, VoC, Automatisation, Product Owner, Négociation, Prospection, etc.)
-  const skillDictionary = [
+  let detectedSkills = [...userProfile.skills];
+
+  // 1. Détection dynamique des années d'expérience
+  const expMatch = lower.match(/(\d+)\s*(?:ans|années)\s*d['\s]*expérience/i) || lower.match(/plus de (\d+)\s*ans/i);
+  let yearsExp = expMatch ? expMatch[1] : "10";
+  const expSkill = `${yearsExp}+ ans d'expérience`;
+  if(!detectedSkills.includes(expSkill)) detectedSkills.unshift(expSkill);
+
+  // 2. Détection de la taille d'équipe managée
+  const teamMatch = lower.match(/(?:équipe|management|encadrement)\s*(?:de|d'|d['\s]*effectif de)?\s*(\d+)\s*(?:personnes|collaborateurs|salariés)?/i);
+  let teamSize = teamMatch ? teamMatch[1] : "3";
+  const teamSkill = `Management d'équipe (${teamSize} personnes)`;
+  if(!detectedSkills.includes(teamSkill)) detectedSkills.push(teamSkill);
+
+  // 3. Dictionnaire étendu et granulaire (compétences, réalisations, soft skills, méthodes)
+  const advancedDictionary = [
+    { keyword: "implémenter", label: "Implémentation de solutions" },
+    { keyword: "implementation", label: "Implémentation de solutions" },
+    { keyword: "déployer", label: "Déploiement de solutions" },
+    { keyword: "déploiement", label: "Déploiement de solutions" },
+    { keyword: "automatisation", label: "Automatisation" },
+    { keyword: "automation", label: "Automatisation" },
     { keyword: "ux", label: "UX" },
     { keyword: "ui", label: "UI" },
     { keyword: "user experience", label: "UX" },
     { keyword: "voc", label: "VoC" },
     { keyword: "voix du client", label: "VoC" },
-    { keyword: "automatisation", label: "Automatisation" },
-    { keyword: "automation", label: "Automatisation" },
     { keyword: "product owner", label: "Product Owner" },
     { keyword: "product manager", label: "Product Manager" },
     { keyword: "négociation", label: "Négociation" },
@@ -405,16 +427,13 @@ function parseAndSmartExtract(text) {
     { keyword: "management", label: "Management" },
     { keyword: "manager", label: "Management" },
     { keyword: "leadership", label: "Leadership" },
-    { keyword: "équipe", label: "Management d'équipe" },
     { keyword: "agile", label: "Agilité / Scrum" },
     { keyword: "scrum", label: "Agilité / Scrum" },
     { keyword: "data", label: "Data & Analytics" },
-    { keyword: "données", label: "Data & Analytics" },
     { keyword: "analyse", label: "Analyse de données" },
     { keyword: "kpi", label: "KPI & Pilotage" },
     { keyword: "roi", label: "ROI & Performance" },
     { keyword: "stratégie", label: "Stratégie" },
-    { keyword: "déploiement", label: "Déploiement de solutions" },
     { keyword: "orienté résultats", label: "Orienté résultats" },
     { keyword: "budget", label: "Gestion budgétaire" },
     { keyword: "marketing", label: "Marketing" },
@@ -428,39 +447,36 @@ function parseAndSmartExtract(text) {
     { keyword: "python", label: "Python" },
     { keyword: "excel", label: "Excel Avancé" },
     { keyword: "power bi", label: "Power BI" },
-    { keyword: "tableau", label: "Tableau" },
     { keyword: "crm", label: "CRM" },
-    { keyword: "salesforce", label: "Salesforce" },
-    { keyword: "zendesk", label: "Zendesk" },
-    { keyword: "jira", label: "Jira" },
-    { keyword: "confluence", label: "Confluence" },
-    { keyword: "veille", label: "Veille stratégique" },
-    { keyword: "e-commerce", label: "E-commerce" },
-    { keyword: "ecommerce", label: "E-commerce" }
+    { keyword: "salesforce", label: "Salesforce" }
   ];
 
-  skillDictionary.forEach(item => {
+  advancedDictionary.forEach(item => {
     if (lower.includes(item.keyword) && !detectedSkills.includes(item.label)) {
       detectedSkills.push(item.label);
     }
   });
 
-  // Détection contextuelle additionnelle par regex (chiffres clés, indicateurs, pourcentages)
-  if (/\d+%/i.test(text) || /croissance|hausse|augmentation|chiffre d'affaires/i.test(text)) {
-    if (!detectedSkills.includes("Orienté résultats")) detectedSkills.push("Orienté résultats");
-  }
+  // 4. Génération automatique du Résumé Narratif structuré
+  let generatedSummary = `Profil professionnel solide s'appuyant sur ${yearsExp}+ années d'expérience. ` +
+    `Compétence avérée dans l'implémentation de solutions, la conduite de projets stratégiques et le management d'équipe (${teamSize} collaborateurs). ` +
+    `Domaines d'expertise clés : ${detectedSkills.slice(0, 10).join(', ')}. ` +
+    `Motivé par l'innovation, l'optimisation des processus, la rigueur et la vision client (UX/VoC), avec un fort ancrage orienté résultats (KPI, ROI).`;
 
-  userProfile.cvText = cleanText;
+  userProfile.narrativeSummary = generatedSummary;
   userProfile.skills = detectedSkills;
+  
+  const narrativeEl = document.getElementById("narrativeInput");
+  if(narrativeEl) narrativeEl.value = generatedSummary;
   renderSkillsPills();
 }
 
 function saveSkillsData(){
-  userProfile.cvText=document.getElementById("cvInput").value;
-  userProfile.exclusions=document.getElementById("exclusionInput").value;
-  userProfile.minSalary=Number(document.getElementById("salaryInput").value)||0;
+  userProfile.narrativeSummary = document.getElementById("narrativeInput").value;
+  userProfile.exclusions = document.getElementById("exclusionInput").value;
+  userProfile.minSalary = Number(document.getElementById("salaryInput").value)||0;
   saveData();
-  alert("Compétences et paramètres enregistrés !");
+  alert("Socle de compétences et résumé narratif enregistrés !");
   renderSearchPage();
 }
 

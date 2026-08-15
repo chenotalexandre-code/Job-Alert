@@ -23,7 +23,7 @@
 .search-card,.profile-card,.alert-card,.application-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;box-shadow:var(--shadow);margin-bottom:18px}.search-grid{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:10px}
 .input,.textarea,.select{width:100%;min-height:44px;border:1px solid var(--border);border-radius:9px;padding:10px 12px;background:#fff;color:var(--text)}.textarea{min-height:140px;resize:vertical}.search-button{border:0;border-radius:9px;padding:0 20px;background:var(--primary);color:#fff;font-weight:700;cursor:pointer;min-height:44px}.search-button:hover{background:var(--primary-dark)}
 .advanced{margin-top:12px}.advanced summary{cursor:pointer;color:var(--primary);font-size:14px;font-weight:600}.advanced-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}.results-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.results-count{color:var(--muted);font-size:14px}.sort{width:190px}.jobs{display:grid;gap:12px}
-.job{background:#fff;border:1px solid var(--border);border-radius:14px;padding:18px;box-shadow:var(--shadow)}.job-top{display:flex;justify-content:space-between;gap:15px}.job-title{font-size:18px;font-weight:750;margin:0 0 5px}.company{color:#475467;font-size:14px}.score{background:#ecfdf3;color:var(--green);font-size:13px;font-weight:700;border-radius:20px;padding:7px 10px;white-space:nowrap;height:fit-content}.meta{display:flex;flex-wrap:wrap;gap:7px;margin:14px 0}.tag{background:#f2f4f7;color:#475467;padding:5px 8px;border-radius:6px;font-size:12px}.salary{font-size:15px;font-weight:750;color:var(--green);margin-bottom:10px}.ai-advice{background:#ecfdf3;border-left:4px solid var(--green);padding:10px;border-radius:6px;font-size:13px;color:var(--green);margin-bottom:14px}.job-footer{border-top:1px solid var(--border);margin-top:14px;padding-top:12px;display:flex;justify-content:space-between;align-items:center;gap:10px}.date{color:var(--muted);font-size:12px}.job-actions{display:flex;gap:8px;flex-wrap:wrap}.small-button{border:1px solid var(--border);background:#fff;border-radius:8px;padding:8px 12px;cursor:pointer;font-size:12px}.small-button:hover{background:#f8fafc}.small-button.favorite{color:#b45309;border-color:#f59e0b}.status-select{min-height:38px;border:1px solid var(--border);border-radius:8px;padding:0 8px;background:#fff;font-size:12px}
+.job{background:#fff;border:1px solid var(--border);border-radius:14px;padding:18px;box-shadow:var(--shadow)}.job-top{display:flex;justify-content:space-between;gap:15px}.job-title{font-size:18px;font-weight:750;margin:0 0 5px}.company{color:#475467;font-size:14px}.score{background:#ecfdf3;color:var(--green);font-size:13px;font-weight:700;border-radius:20px;padding:7px 10px;white-space:nowrap;height:fit-content}.meta{display:flex;flex-wrap:wrap;gap:7px;margin:14px 0}.tag{background:#f2f4f7;color:#475467;padding:5px 8px;border-radius:6px;font-size:12px}.salary{font-size:15px;font-weight:750;color:var(--green);margin-bottom:10px}.ai-advice{background:#ecfdf3;border-left:4px solid var(--green);padding:10px;border-radius:6px;font-size:13px;color:var(--green);margin-bottom:14px}.job-footer{border-top:1px solid var(--border);margin-top:14px;padding-top:12px;display:flex;justify-content:space-between;align-items:center;gap:10px}.date{color:var(--muted);font-size:12px}.job-actions{display:flex;gap:8px;flex-wrap:wrap}.small-button{border:1px solid var(--border);background:#fff;border-radius:8px;padding:8px 12px;cursor:pointer;font-size:12px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}.small-button:hover{background:#f8fafc}.small-button.favorite{color:#b45309;border-color:#f59e0b}.status-select{min-height:38px;border:1px solid var(--border);border-radius:8px;padding:0 8px;background:#fff;font-size:12px}
 .application-row{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:14px 0;border-bottom:1px solid var(--border)}.application-row:last-child{border-bottom:0}.application-title{font-weight:700;margin-bottom:4px}.application-company{color:var(--muted);font-size:13px}.application-status{background:#eff6ff;color:var(--primary);border-radius:20px;padding:6px 10px;font-size:12px;font-weight:700}
 .empty{background:#fff;border:1px dashed var(--border);border-radius:14px;padding:40px 20px;text-align:center;color:var(--muted)}.profile-section-title{font-size:15px;font-weight:800;margin-bottom:12px}.field{margin-bottom:16px}.field label{display:block;font-weight:700;margin-bottom:6px;font-size:14px}
 .scan-status{font-size:13px;font-weight:700;color:var(--primary);margin-top:8px}
@@ -63,31 +63,25 @@
 </div>
 <script>
 const jobs=[
-{id:1,title:"Responsable Expérience Client",company:"TechCorp Paris",location:"Paris",contract:"CDI",remote:"Oui",salary:65000,maxSalary:75000,score:96,date:"2026-08-14",tags:["Expérience Client","VoC","Management","Gestion de projet","Orienté résultats","UX"],source:"Entreprise",aiAdvice:"💡 Conseil IA : Forte correspondance avec ton savoir-faire et tes indicateurs de résultats."},
-{id:2,title:"Responsable Satisfaction Client",company:"Inovium Group",location:"Île-de-France",contract:"CDI",remote:"Oui",salary:60000,maxSalary:70000,score:92,date:"2026-08-13",tags:["Customer Experience","Management","Relation client","Vision Client"],source:"LinkedIn",aiAdvice:"💡 Conseil IA : Excellent alignement avec tes compétences relationnelles et de pilotage."},
-{id:3,title:"Product Owner Data",company:"DataPulse",location:"Paris",contract:"CDI",remote:"Oui",salary:55000,maxSalary:68000,score:84,date:"2026-08-11",tags:["Product Owner","Data","Agile","Gestion de projet","Automatisation"],source:"France Travail",aiAdvice:"💡 Conseil IA : Opportunité axée sur la gestion de projet et l'analyse de données."},
-{id:4,title:"Chef de Projet Expérience Client",company:"Symphony CX",location:"Boulogne-Billancourt",contract:"CDI",remote:"Oui",salary:50000,maxSalary:60000,score:78,date:"2026-08-09",tags:["CX","Parcours Client","Gestion de projet","Voix du Client","Rigueur"],source:"LinkedIn",aiAdvice:"💡 Conseil IA : Parfaitement adapté à ton expertise en gestion de projet CX."}
+{id:1,title:"Responsable Expérience Client",company:"TechCorp Paris",location:"Paris",contract:"CDI",remote:"Oui",salary:65000,maxSalary:75000,score:96,date:"2026-08-14",tags:["Expérience Client","VoC","Management","Gestion de projet","Orienté résultats","UX"],source:"LinkedIn",url:"https://www.linkedin.com/jobs/",aiAdvice:"💡 Conseil IA : Forte correspondance avec ton savoir-faire et tes indicateurs de résultats."},
+{id:2,title:"Responsable Satisfaction Client",company:"Inovium Group",location:"Île-de-France",contract:"CDI",remote:"Oui",salary:60000,maxSalary:70000,score:92,date:"2026-08-13",tags:["Customer Experience","Management","Relation client","Vision Client"],source:"Indeed",url:"https://fr.indeed.com/",aiAdvice:"💡 Conseil IA : Excellent alignement avec tes compétences relationnelles et de pilotage."},
+{id:3,title:"Product Owner Data",company:"DataPulse",location:"Paris",contract:"CDI",remote:"Oui",salary:55000,maxSalary:68000,score:84,date:"2026-08-11",tags:["Product Owner","Data","Agile","Gestion de projet","Automatisation"],source:"France Travail",url:"https://www.francetravail.fr/",aiAdvice:"💡 Conseil IA : Opportunité axée sur la gestion de projet et l'analyse de données."},
+{id:4,title:"Chef de Projet Expérience Client",company:"Symphony CX",location:"Boulogne-Billancourt",contract:"CDI",remote:"Oui",salary:50000,maxSalary:60000,score:78,date:"2026-08-09",tags:["CX","Parcours Client","Gestion de projet","Voix du Client","Rigueur"],source:"LinkedIn",url:"https://www.linkedin.com/jobs/",aiAdvice:"💡 Conseil IA : Parfaitement adapté à ton expertise en gestion de projet CX."}
 ];
 
 function loadJSON(key,fallback){try{const value=localStorage.getItem(key);return value?JSON.parse(value):fallback}catch(e){return fallback}}
 let favorites=loadJSON("jobAlertFavorites",[]);
 let applications=loadJSON("jobAlertApplications",{});
 let userProfile=loadJSON("jobAlertProfile",{
-  firstName: "Alexandre",
-  lastName: "Dupont",
-  birthdate: "1992-05-14",
-  phone: "06 12 34 56 78",
-  email: "alexandre.dupont@email.com",
-  narrativeSummary: "Parcours professionnel senior d'une décennie articulé autour de la gestion de projets complexes, de l'expérience client (CX/UX/VoC) et du leadership d'équipe (encadrement direct de 3 collaborateurs). Expert dans l'implémentation de solutions innovantes et l'automatisation des processus. Motivé par l'excellence opérationnelle, la vision client et l'atteinte rigoureuse d'objectifs de performance (KPI, ROI). Solide formation académique et background en stratégie de marché.",
-  skills:[
-    "10+ ans d'expérience", "Management d'équipe (3 personnes)", "Gestion de projet", 
-    "Expérience Client", "Management", "Orienté résultats", "Relation client", 
-    "VoC", "Product Owner", "Négociation", "Rigueur", "Innovation", 
-    "UX", "Automatisation", "Prospection", "Étude de marché", 
-    "Gestion de risque", "Vision Client", "Implémentation de solutions"
-  ],
+  firstName: "",
+  lastName: "",
+  birthdate: "",
+  phone: "",
+  email: "",
+  narrativeSummary: "",
+  skills: [],
   exclusions:"",
-  minSalary:40000
+  minSalary:0
 });
 let alertConfig=loadJSON("jobAlertConfig",{searchQuery:"",locationQuery:"",aiPrompt:"Recherche les offres correspondant à mon savoir-faire et mes compétences clés.",frequency:"Quotidienne",time:"20:00"});
 let currentView="search";
@@ -167,7 +161,9 @@ results.forEach(job => {
     let matchedSkillsCount = userProfile.skills.filter(skill => 
       job.tags.some(t => t.toLowerCase().includes(skill.toLowerCase())) || job.title.toLowerCase().includes(skill.toLowerCase())
     ).length;
-    job.score = Math.min(99, 65 + (matchedSkillsCount * 8));
+    job.score = Math.min(99, 50 + (matchedSkillsCount * 12));
+  } else {
+    job.score = 50; // Score neutre si aucune compétence n'est renseignée
   }
 });
 
@@ -184,7 +180,7 @@ const count=document.getElementById("resultsCount");if(count)count.textContent=r
 if(!results.length){container.innerHTML='<div class="empty"><strong>Aucune offre trouvée</strong><br><span>Modifie tes critères ou ton socle de compétences.</span></div>';return}
 container.innerHTML=results.map(job=>{
 const fav=favorites.includes(job.id),app=applications[job.id]||"";
-return `<article class="job"><div class="job-top"><div><h2 class="job-title">${job.title}</h2><div class="company">${job.company} · ${job.location}</div></div><div class="score">${job.score}% match</div></div><div class="meta"><span class="tag">${job.contract}</span><span class="tag">${job.remote==="Oui"?"Télétravail":"Sur site"}</span>${job.tags.map(t=>`<span class="tag">${t}</span>`).join("")}</div><div class="salary">${job.salary.toLocaleString("fr-FR")} – ${job.maxSalary.toLocaleString("fr-FR")} € / an</div><div class="ai-advice">${job.aiAdvice}</div><div class="job-footer"><div class="date">Publiée le ${new Date(job.date).toLocaleDateString("fr-FR")} · ${job.source}</div><div class="job-actions"><button class="small-button ${fav?"favorite":""}" onclick="toggleFavorite(${job.id})">${fav?"★ Favori":"☆ Favori"}</button><select class="status-select" onchange="setApplication(${job.id},this.value)"><option value="">Suivi</option><option value="À contacter" ${app==="À contacter"?"selected":""}>À contacter</option><option value="Candidature envoyée" ${app==="Candidature envoyée"?"selected":""}>Candidature envoyée</option><option value="Entretien" ${app==="Entretien"?"selected":""}>Entretien</option></select></div></div></article>`}).join("");
+return `<article class="job"><div class="job-top"><div><h2 class="job-title">${job.title}</h2><div class="company">${job.company} · ${job.location}</div></div><div class="score">${job.score}% match</div></div><div class="meta"><span class="tag">${job.contract}</span><span class="tag">${job.remote==="Oui"?"Télétravail":"Sur site"}</span>${job.tags.map(t=>`<span class="tag">${t}</span>`).join("")}</div><div class="salary">${job.salary.toLocaleString("fr-FR")} – ${job.maxSalary.toLocaleString("fr-FR")} € / an</div><div class="ai-advice">${job.aiAdvice}</div><div class="job-footer"><div class="date">Publiée le ${new Date(job.date).toLocaleDateString("fr-FR")} · Source : ${job.source}</div><div class="job-actions"><a href="${job.url}" target="_blank" class="small-button" style="background:var(--primary);color:#fff;border-color:var(--primary);">🔗 Voir l'offre</a><button class="small-button ${fav?"favorite":""}" onclick="toggleFavorite(${job.id})">${fav?"★ Favori":"☆ Favori"}</button><select class="status-select" onchange="setApplication(${job.id},this.value)"><option value="">Suivi</option><option value="À contacter" ${app==="À contacter"?"selected":""}>À contacter</option><option value="Candidature envoyée" ${app==="Candidature envoyée"?"selected":""}>Candidature envoyée</option><option value="Entretien" ${app==="Entretien"?"selected":""}>Entretien</option></select></div></div></article>`}).join("");
 }
 
 function toggleFavorite(id){favorites.includes(id)?favorites=favorites.filter(x=>x!==id):favorites.push(id);saveData();currentView==="search"?searchJobs():showFavorites()}
@@ -236,7 +232,7 @@ currentView="skillsProfile";closeProfileMenu();document.querySelectorAll(".tab-b
 
 document.getElementById("mainContent").innerHTML=`
 <h1 class="page-title">Mes Compétences & Socle Stratégique</h1>
-<p class="page-description">Importe un CV (PDF). Notre moteur d'intelligence sémantique analysera les sections pour en extraire le socle de compétences et rédiger un résumé narratif structuré.</p>
+<p class="page-description">Importe un CV (PDF) pour une analyse sémantique, ou gère manuellement tes compétences clés.</p>
 
 <div class="profile-card">
   <div class="profile-section-title">🤖 Moteur d'analyse et d'extraction intelligente (PDF)</div>
@@ -249,7 +245,10 @@ document.getElementById("mainContent").innerHTML=`
 </div>
 
 <div class="profile-card">
-  <div class="profile-section-title">🏷️ Compétences & Savoir-faire identifiés</div>
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+    <div class="profile-section-title" style="margin-bottom:0;">🏷️ Compétences & Savoir-faire identifiés</div>
+    <button class="small-button" id="clearAllSkillsBtn" type="button" style="color:var(--red); border-color:#fecaca; background:#fef2f2;">🗑️ Tout effacer</button>
+  </div>
   <p style="font-size:13px; color:var(--muted); margin-top:0;">Pastilles dynamiques utilisées pour le calcul du taux d'atteinte et le matching des offres.</p>
   <div id="skillsListContainer" class="skills-container"></div>
   <div class="skill-add-row" style="margin-top: 12px;">
@@ -282,6 +281,7 @@ document.getElementById("mainContent").innerHTML=`
 renderSkillsPills();
 
 document.getElementById("analyzeCvBtn").addEventListener("click", handlePdfIntelligenceAnalysis);
+document.getElementById("clearAllSkillsBtn").addEventListener("click", clearAllSkills);
 document.getElementById("addSkillBtn").addEventListener("click", addNewSkill);
 document.getElementById("newSkillInput").addEventListener("keypress", (e) => { if(e.key === 'Enter') { e.preventDefault(); addNewSkill(); } });
 document.getElementById("saveSkillsBtn").addEventListener("click", saveSkillsData);
@@ -292,7 +292,7 @@ function renderSkillsPills() {
   const container = document.getElementById("skillsListContainer");
   if(!container) return;
   if(!userProfile.skills || userProfile.skills.length === 0) {
-    container.innerHTML = '<span style="color:var(--muted); font-size:13px; padding:4px;">Aucune compétence définie.</span>';
+    container.innerHTML = '<span style="color:var(--muted); font-size:13px; padding:4px;">Aucune compétence définie. Importe ton CV ou ajoute-les manuellement.</span>';
     return;
   }
   container.innerHTML = userProfile.skills.map((skill, index) => `
@@ -309,6 +309,14 @@ function addNewSkill() {
   if(val && !userProfile.skills.includes(val)) {
     userProfile.skills.push(val);
     input.value = "";
+    renderSkillsPills();
+  }
+}
+
+function clearAllSkills() {
+  if(confirm("Veux-tu vraiment supprimer toutes les pastilles de compétences ?")) {
+    userProfile.skills = [];
+    saveData();
     renderSkillsPills();
   }
 }
@@ -348,7 +356,6 @@ async function handlePdfIntelligenceAnalysis() {
       return;
     }
 
-    // Lancement du pipeline d'intelligence de CV
     runAdvancedCVIntelligence(fullText);
     statusEl.textContent = `✨ Analyse intelligente réussie ! Synthèse narrative générée et ${userProfile.skills.length} compétences structurées.`;
   } catch (error) {
@@ -363,8 +370,7 @@ function runAdvancedCVIntelligence(text) {
 
   let extractedSkills = [];
 
-  // 1. Extraction intelligente de l'expérience globale (Recherche de motifs temporels d'ancienneté)
-  let yearsFound = "10";
+  let yearsFound = "5";
   const expPatterns = [
     /(\d+)\s*(?:ans|années)\s*(?:d['\s]*expérience|exp)/i,
     /plus de (\d+)\s*ans/i,
@@ -373,7 +379,7 @@ function runAdvancedCVIntelligence(text) {
   for(let pattern of expPatterns) {
     const match = lower.match(pattern);
     if(match) {
-      if(pattern.source.includes("4")) { // cas "depuis 2014"
+      if(pattern.source.includes("4")) {
         const yearVal = parseInt(match[1]);
         const currentYear = new Date().getFullYear();
         yearsFound = Math.max(2, currentYear - yearVal).toString();
@@ -385,7 +391,6 @@ function runAdvancedCVIntelligence(text) {
   }
   extractedSkills.push(`${yearsFound}+ ans d'expérience`);
 
-  // 2. Détection contextuelle du management d'équipe et de la taille d'équipe
   let teamSize = "3";
   const teamPatterns = [
     /(?:équipe|management|encadrement|manager)\s*(?:de|d'|d['\s]*effectif de|composée de)?\s*(\d+)\s*(?:personnes|collaborateurs|salariés|membres)?/i,
@@ -402,7 +407,6 @@ function runAdvancedCVIntelligence(text) {
     extractedSkills.push(`Management d'équipe (${teamSize} personnes)`);
   }
 
-  // 3. Détection des formations et études (Master, Ingénieur, Licence, Bachelor, etc.)
   let educationDegree = "Formation supérieure";
   const degrees = [
     { keyword: "master", label: "Master / Bac+5" },
@@ -422,7 +426,6 @@ function runAdvancedCVIntelligence(text) {
     }
   }
 
-  // 4. Dictionnaire métier intelligent couvrant toutes les expertises transverses
   const intelligenceTaxonomy = [
     { keys: ["implémenter", "implementation", "déployer", "déploiement", "mise en place"], label: "Implémentation de solutions" },
     { keys: ["automatisation", "automation", "script", "workflow"], label: "Automatisation" },
@@ -454,7 +457,6 @@ function runAdvancedCVIntelligence(text) {
 
   userProfile.skills = extractedSkills;
 
-  // 5. Synthèse narrative intelligente structurée (Mélangeant parcours, études, motivations, forces)
   let generatedNarrative = `Parcours professionnel riche de ${yearsFound}+ années d'expérience, appuyé par un cursus académique de type ${educationDegree}. ` +
     `Reconnu pour une expertise avérée dans l'implémentation de solutions, la conduite de projets stratégiques et le pilotage opérationnel (management d'une équipe de ${teamSize} collaborateurs). ` +
     `Forces principales : ${extractedSkills.slice(0, 8).join(', ')}. ` +
